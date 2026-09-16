@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Games</title>
+  <title>Contact Me — Mani Zamzami</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="../assets/images/logo.png" />
@@ -213,7 +213,6 @@
       opacity: 0.9;
     }
 
-    /* Sidebar logo, top of the panel */
     .sidebar-brand {
       position: relative;
       display: flex;
@@ -356,13 +355,12 @@
       padding-bottom: 4px;
     }
 
-    /* Tools submenu items: same nav-link look, slightly smaller
-       to read as children of "Tools" rather than top-level items. */
     .nav-sublink {
-      min-height: 38px;
-      padding: 9px 12px;
-      font-size: 13.5px;
       gap: 10px;
+      padding: 9px 12px;
+      min-height: 38px;
+      font-size: 13.5px;
+      font-weight: 450;
     }
 
     .nav-sublink .icon,
@@ -440,18 +438,8 @@
       margin-left: var(--sidebar-rail);
     }
 
-    .welcome {
-      font-size: clamp(2.4rem, 6vw, 4.6rem);
-      font-weight: 300;
-      letter-spacing: 0.01em;
-      color: var(--text-primary);
-      text-align: center;
-      text-shadow: 0 0 60px rgba(0, 160, 255, 0.25);
-      user-select: none;
-    }
-
     /* -----------------------------------------------------------
-       Games content (same visual/interaction system as Projects)
+       Contact Me content
     ----------------------------------------------------------- */
     .projects-content {
       width: 100%;
@@ -468,185 +456,138 @@
       text-shadow: 0 0 40px rgba(0, 160, 255, 0.18);
     }
 
-    .projects-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
       width: 100%;
-      min-width: 0;
     }
 
-    .project-item {
-      position: relative;
+    .contact-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      text-align: center;
+      padding: 28px 20px;
       border-radius: 16px;
       border: 1px solid var(--glass-border);
       background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(18px) saturate(150%);
       -webkit-backdrop-filter: blur(18px) saturate(150%);
-      overflow: hidden;
       min-width: 0;
-      transition: border-color 0.3s ease, background-color 0.3s ease;
+      transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s var(--ease-glass);
     }
 
-    .project-item:hover {
+    .contact-card:hover {
       border-color: rgba(180, 205, 255, 0.24);
       background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px);
     }
 
-    .project-item-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      min-width: 0;
+    .contact-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 6px 16px rgba(0, 140, 255, 0.2));
     }
 
-    /* Arrow / expand toggle — no circular background or border */
-    .project-toggle {
-      flex-shrink: 0;
-      width: 32px;
-      height: 32px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
+    /* Bale logo slightly larger */
+    .contact-card.bale-card .contact-logo {
+      width: 58px;
+      height: 58px;
+    }
+
+    /* LinkedIn logo-to-button spacing matches the other cards */
+    .contact-card.linkedin-card {
+      gap: 28px;
+    }
+
+    .contact-detail {
+      margin: 0;
+      max-width: 100%;
+      overflow-wrap: break-word;
       color: var(--text-secondary);
-      display: flex;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+    }
+
+    /* Contact action buttons */
+    .contact-card .open-project-btn {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
-      cursor: pointer;
-      transition: color 0.3s ease, background-color 0.3s ease;
-    }
-
-    .project-toggle:hover {
+      gap: 8px;
+      margin-top: 2px;
+      min-width: 126px;
+      min-height: 42px;
+      padding: 10px 18px;
+      border: 1px solid rgba(0, 200, 255, 0.28);
+      border-radius: 12px;
+      background: linear-gradient(
+        135deg,
+        rgba(0, 140, 255, 0.18),
+        rgba(0, 200, 255, 0.08)
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 8px 22px rgba(0, 100, 255, 0.12);
       color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.06);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 550;
+      letter-spacing: 0.01em;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s var(--ease-glass);
     }
 
-    .project-toggle:focus-visible {
+    .contact-card .open-project-btn:hover {
+      background: linear-gradient(
+        135deg,
+        rgba(0, 140, 255, 0.28),
+        rgba(0, 200, 255, 0.14)
+      );
+      border-color: rgba(0, 200, 255, 0.48);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 10px 28px rgba(0, 140, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .contact-card .open-project-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .contact-card .open-project-btn:focus-visible {
       outline: 2px solid rgba(0, 200, 255, 0.6);
-      outline-offset: 2px;
+      outline-offset: 3px;
     }
 
-    .project-toggle svg {
-      width: 18px;
-      height: 18px;
+    .contact-card .open-project-btn svg {
+      width: 16px;
+      height: 16px;
       stroke: currentColor;
       fill: none;
       stroke-width: 1.8;
       stroke-linecap: round;
       stroke-linejoin: round;
-      transition: transform 0.35s var(--ease-glass);
+      transition: transform 0.3s var(--ease-glass);
     }
 
-    /* Chevron points right when collapsed, down when expanded */
-    .project-toggle[aria-expanded="true"] svg {
-      transform: rotate(90deg);
+    .contact-card .open-project-btn:hover svg {
+      transform: translate(2px, -2px);
     }
 
-    /* Title acts as a second expand/collapse trigger — never navigates */
-    .project-title {
-      flex: 1;
-      min-width: 0;
-      display: block;
-      background: none;
-      border: none;
-      padding: 4px 0;
-      margin: 0;
-      color: var(--text-primary);
-      font: inherit;
-      text-align: left;
-      text-decoration: none;
-      font-size: clamp(1rem, 2.4vw, 1.15rem);
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      overflow-wrap: break-word;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .project-title:hover {
-      color: var(--c-cyan);
-    }
-
-    .project-title:focus-visible {
-      outline: 2px solid rgba(0, 200, 255, 0.6);
-      outline-offset: 2px;
-      border-radius: 4px;
-    }
-
-    /* Play button — the only control that navigates */
-    .project-actions {
-      flex-shrink: 0;
-      margin-left: 4px;
-    }
-
-    .open-project-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      padding: 9px 18px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(0, 140, 255, 0.16), rgba(0, 200, 255, 0.06));
-      border: 1px solid rgba(0, 200, 255, 0.28);
-      color: var(--text-primary);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .open-project-btn:hover {
-      border-color: rgba(0, 200, 255, 0.45);
-      box-shadow: 0 0 20px rgba(0, 140, 255, 0.2);
-    }
-
-    .open-project-btn:focus-visible {
-      outline: 2px solid rgba(0, 200, 255, 0.6);
-      outline-offset: 2px;
-    }
-
-    .project-description {
-      max-height: 0;
-      overflow: hidden;
-      padding: 0 16px;
-      transition: max-height 0.4s var(--ease-glass), padding 0.4s var(--ease-glass);
-    }
-
-    .project-description.open {
-      /* Taller cap than the Projects page since these descriptions run longer */
-      max-height: 420px;
-      padding: 0 16px 16px 60px;
-    }
-
-    .project-description p {
-      margin: 0 0 10px 0;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.55;
-    }
-
-    .project-description p:last-child {
-      margin-bottom: 0;
-    }
-
-    /* Stack the Play button under the title on very narrow screens */
-    @media (max-width: 480px) {
-      .project-item-row {
-        flex-wrap: wrap;
-      }
-
-      .project-actions {
-        flex-basis: 100%;
-        margin-left: 0;
-        margin-top: 8px;
-        padding-left: 44px;
-      }
-
-      .open-project-btn {
-        width: 100%;
+    @media (max-width: 360px) {
+      .contact-card {
+        padding: 24px 16px;
       }
     }
 
@@ -671,10 +612,6 @@
 
       .sidebar.collapsed ~ .main-content {
         margin-left: 0;
-      }
-
-      .project-description.open {
-        padding: 0 12px 14px 48px;
       }
 
       .mobile-menu-btn {
@@ -847,12 +784,6 @@
         min-height: 42px;
       }
     }
-
-    @media (max-width: 360px) {
-      .welcome {
-        font-size: clamp(2rem, 9vw, 2.6rem);
-      }
-    }
   </style>
 
 </head>
@@ -865,354 +796,353 @@
 
   <div class="app-shell">
 
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-surface">
-    <div class="sidebar-brand">
-      <img src="../assets/images/logo.png" alt="Logo" />
-    </div>
-
-    <nav class="sidebar-nav" aria-label="Primary navigation">
-
-      <a class="nav-link" href="../">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M4 11.5 12 4l8 7.5" />
-            <path d="M6 10v9a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1v-9" />
-          </svg>
-        </span>
-        <span class="label">Home</span>
-      </a>
-
-      <a class="nav-link" href="../projects/">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <rect x="3.5" y="6" width="17" height="13" rx="2" />
-            <path d="M8 6V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" />
-            <path d="M3.5 11h17" />
-          </svg>
-        </span>
-        <span class="label">Projects</span>
-      </a>
-
-      <a class="nav-link active" href="./" aria-current="page">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <rect x="2.5" y="8" width="19" height="10" rx="4" />
-            <path d="M7.5 11.5v3M6 13h3" />
-            <path d="M15.5 12.7h.01M17.5 14.7h.01" />
-          </svg>
-        </span>
-        <span class="label">Games</span>
-      </a>
-
-      <div class="nav-group">
-        <button
-          type="button"
-          class="nav-link nav-toggle"
-          id="toolsToggleDesktop"
-          aria-expanded="false"
-          aria-controls="toolsSubmenuDesktop"
-        >
-          <span class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M14.7 6.3a3 3 0 0 1-3.9 3.9L5 16v3h3l5.8-5.8a3 3 0 0 1 3.9-3.9L21 6l-3-3-3.3 3.3Z" />
-            </svg>
-          </span>
-          <span class="label">Tools</span>
-          <span class="nav-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="m9 6 6 6-6 6" />
-            </svg>
-          </span>
-        </button>
-
-        <div
-          class="nav-submenu"
-          id="toolsSubmenuDesktop"
-          role="group"
-          aria-label="Tools submenu"
-        >
-          <a class="nav-link nav-sublink" href="../tools/bots/">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <rect x="4" y="7" width="16" height="12" rx="3" />
-                <circle cx="9" cy="13" r="1.3" />
-                <circle cx="15" cy="13" r="1.3" />
-                <path d="M12 7V4M9.5 4h5" />
-              </svg>
-            </span>
-            <span class="label">Bots</span>
-          </a>
-          <a class="nav-link nav-sublink" href="../tools/qr-code-generator/">
-            <span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1" />
-                <rect x="14" y="3.5" width="6.5" height="6.5" rx="1" />
-                <rect x="3.5" y="14" width="6.5" height="6.5" rx="1" />
-                <path d="M14 14h3v3h-3zM19.5 14h1M14 19.5h1M17.5 17.5h3v3h-3z" />
-              </svg>
-            </span>
-            <span class="label">QR Code Generator</span>
-          </a>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-surface">
+        <div class="sidebar-brand">
+          <img src="../assets/images/logo.png" alt="Logo" />
         </div>
+
+        <nav class="sidebar-nav" aria-label="Primary navigation">
+
+          <a class="nav-link" href="../">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 11.5 12 4l8 7.5" />
+                <path d="M6 10v9a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1v-9" />
+              </svg>
+            </span>
+            <span class="label">Home</span>
+          </a>
+
+          <a class="nav-link" href="../projects/">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3.5" y="6" width="17" height="13" rx="2" />
+                <path d="M8 6V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" />
+                <path d="M3.5 11h17" />
+              </svg>
+            </span>
+            <span class="label">Projects</span>
+          </a>
+
+          <a class="nav-link" href="../games/">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="2.5" y="8" width="19" height="10" rx="4" />
+                <path d="M7.5 11.5v3M6 13h3" />
+                <path d="M15.5 12.7h.01M17.5 14.7h.01" />
+              </svg>
+            </span>
+            <span class="label">Games</span>
+          </a>
+
+          <div class="nav-group">
+            <button
+              type="button"
+              class="nav-link nav-toggle"
+              id="toolsToggleDesktop"
+              aria-expanded="false"
+              aria-controls="toolsSubmenuDesktop"
+            >
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14.7 6.3a3 3 0 0 1-3.9 3.9L5 16v3h3l5.8-5.8a3 3 0 0 1 3.9-3.9L21 6l-3-3-3.3 3.3Z" />
+                </svg>
+              </span>
+              <span class="label">Tools</span>
+              <span class="nav-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </span>
+            </button>
+
+            <div
+              class="nav-submenu"
+              id="toolsSubmenuDesktop"
+              role="group"
+              aria-label="Tools submenu"
+            >
+              <a class="nav-link nav-sublink" href="../tools/bots/">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="4" y="7" width="16" height="12" rx="3" />
+                    <circle cx="9" cy="13" r="1.3" />
+                    <circle cx="15" cy="13" r="1.3" />
+                    <path d="M12 7V4M9.5 4h5" />
+                  </svg>
+                </span>
+                <span class="label">Bots</span>
+              </a>
+
+              <a class="nav-link nav-sublink" href="../tools/qr-code-generator/">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1" />
+                    <rect x="14" y="3.5" width="6.5" height="6.5" rx="1" />
+                    <rect x="3.5" y="14" width="6.5" height="6.5" rx="1" />
+                    <path d="M14 14h3v3h-3zM19.5 14h1M14 19.5h1M17.5 17.5h3v3h-3z" />
+                  </svg>
+                </span>
+                <span class="label">QR Code Generator</span>
+              </a>
+            </div>
+          </div>
+
+          <a class="nav-link active" href="../contact-me/" aria-current="page">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="14" rx="2.2" />
+                <path d="m4 7 8 6 8-6" />
+              </svg>
+            </span>
+            <span class="label">Contact Me</span>
+          </a>
+
+        </nav>
       </div>
-
-      <a class="nav-link" href="../contact-me/">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <rect x="3" y="5" width="18" height="14" rx="2.2" />
-            <path d="m4 7 8 6 8-6" />
-          </svg>
-        </span>
-        <span class="label">Contact Me</span>
-      </a>
-
-    </nav>
-  </div>
-
-  <button
-    type="button"
-    class="sidebar-toggle"
-    id="sidebarToggle"
-    aria-label="Collapse sidebar"
-    aria-expanded="true"
-    aria-controls="sidebar"
-  >
-    <svg viewBox="0 0 24 24">
-      <path d="M15 5 8 12l7 7" />
-    </svg>
-  </button>
-</aside>
-
-<button
-  type="button"
-  class="mobile-menu-btn"
-  id="mobileMenuBtn"
-  aria-label="Open menu"
-  aria-expanded="false"
-  aria-controls="mobileDrawer"
->
-  <svg viewBox="0 0 24 24">
-    <path d="M4 7h16M4 12h16M4 17h16" />
-  </svg>
-</button>
-
-<div class="mobile-overlay" id="mobileOverlay"></div>
-
-<aside
-  class="mobile-drawer"
-  id="mobileDrawer"
-  aria-label="Mobile navigation"
-  aria-hidden="true"
->
-  <div class="mobile-drawer-surface">
-
-    <div class="mobile-drawer-header">
-      <img src="../assets/images/logo.png" alt="Logo" />
 
       <button
         type="button"
-        class="mobile-drawer-close"
-        id="mobileDrawerClose"
-        aria-label="Close menu"
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        aria-label="Collapse sidebar"
+        aria-expanded="true"
+        aria-controls="sidebar"
       >
         <svg viewBox="0 0 24 24">
-          <path d="m6 6 12 12M18 6 6 18" />
+          <path d="M15 5 8 12l7 7" />
         </svg>
       </button>
-    </div>
+    </aside>
 
-    <nav class="mobile-drawer-nav" aria-label="Primary navigation">
+    <button
+      type="button"
+      class="mobile-menu-btn"
+      id="mobileMenuBtn"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobileDrawer"
+    >
+      <svg viewBox="0 0 24 24">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
 
-      <a class="nav-link" href="../">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M4 11.5 12 4l8 7.5" />
-            <path d="M6 10v9a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1v-9" />
-          </svg>
-        </span>
-        <span class="label">Home</span>
-      </a>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
 
-      <a class="nav-link" href="../projects/">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <rect x="3.5" y="6" width="17" height="13" rx="2" />
-            <path d="M8 6V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" />
-            <path d="M3.5 11h17" />
-          </svg>
-        </span>
-        <span class="label">Projects</span>
-      </a>
+    <aside
+      class="mobile-drawer"
+      id="mobileDrawer"
+      aria-label="Mobile navigation"
+      aria-hidden="true"
+    >
+      <div class="mobile-drawer-surface">
 
-      <a class="nav-link active" href="./" aria-current="page">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <rect x="2.5" y="8" width="19" height="10" rx="4" />
-            <path d="M7.5 11.5v3M6 13h3" />
-            <path d="M15.5 12.7h.01M17.5 14.7h.01" />
-          </svg>
-        </span>
-        <span class="label">Games</span>
-      </a>
+        <div class="mobile-drawer-header">
+          <img src="../assets/images/logo.png" alt="Logo" />
 
-      <div class="nav-group">
-        <button
-          type="button"
-          class="nav-link nav-toggle"
-          id="toolsToggleMobile"
-          aria-expanded="false"
-          aria-controls="toolsSubmenuMobile"
-        >
-          <span class="icon" aria-hidden="true">
+          <button
+            type="button"
+            class="mobile-drawer-close"
+            id="mobileDrawerClose"
+            aria-label="Close menu"
+          >
             <svg viewBox="0 0 24 24">
-              <path d="M14.7 6.3a3 3 0 0 1-3.9 3.9L5 16v3h3l5.8-5.8a3 3 0 0 1 3.9-3.9L21 6l-3-3-3.3 3.3Z" />
+              <path d="m6 6 12 12M18 6 6 18" />
             </svg>
-          </span>
-          <span class="label">Tools</span>
-          <span class="nav-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="m9 6 6 6-6 6" />
-            </svg>
-          </span>
-        </button>
+          </button>
+        </div>
 
-        <div
-          class="nav-submenu"
-          id="toolsSubmenuMobile"
-          role="group"
-          aria-label="Tools submenu"
-        >
-          <a class="nav-link nav-sublink" href="../tools/bots/">
+        <nav class="mobile-drawer-nav" aria-label="Primary navigation">
+
+          <a class="nav-link" href="../">
             <span class="icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <rect x="4" y="7" width="16" height="12" rx="3" />
-                <circle cx="9" cy="13" r="1.3" />
-                <circle cx="15" cy="13" r="1.3" />
-                <path d="M12 7V4M9.5 4h5" />
+                <path d="M4 11.5 12 4l8 7.5" />
+                <path d="M6 10v9a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1v-9" />
               </svg>
             </span>
-            <span class="label">Bots</span>
+            <span class="label">Home</span>
           </a>
-          <a class="nav-link nav-sublink" href="../tools/qr-code-generator/">
+
+          <a class="nav-link" href="../projects/">
             <span class="icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1" />
-                <rect x="14" y="3.5" width="6.5" height="6.5" rx="1" />
-                <rect x="3.5" y="14" width="6.5" height="6.5" rx="1" />
-                <path d="M14 14h3v3h-3zM19.5 14h1M14 19.5h1M17.5 17.5h3v3h-3z" />
+                <rect x="3.5" y="6" width="17" height="13" rx="2" />
+                <path d="M8 6V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" />
+                <path d="M3.5 11h17" />
               </svg>
             </span>
-            <span class="label">QR Code Generator</span>
+            <span class="label">Projects</span>
           </a>
-        </div>
+
+          <a class="nav-link" href="../games/">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="2.5" y="8" width="19" height="10" rx="4" />
+                <path d="M7.5 11.5v3M6 13h3" />
+                <path d="M15.5 12.7h.01M17.5 14.7h.01" />
+              </svg>
+            </span>
+            <span class="label">Games</span>
+          </a>
+
+          <div class="nav-group">
+            <button
+              type="button"
+              class="nav-link nav-toggle"
+              id="toolsToggleMobile"
+              aria-expanded="false"
+              aria-controls="toolsSubmenuMobile"
+            >
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14.7 6.3a3 3 0 0 1-3.9 3.9L5 16v3h3l5.8-5.8a3 3 0 0 1 3.9-3.9L21 6l-3-3-3.3 3.3Z" />
+                </svg>
+              </span>
+              <span class="label">Tools</span>
+              <span class="nav-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </span>
+            </button>
+
+            <div
+              class="nav-submenu"
+              id="toolsSubmenuMobile"
+              role="group"
+              aria-label="Tools submenu"
+            >
+              <a class="nav-link nav-sublink" href="../tools/bots/">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="4" y="7" width="16" height="12" rx="3" />
+                    <circle cx="9" cy="13" r="1.3" />
+                    <circle cx="15" cy="13" r="1.3" />
+                    <path d="M12 7V4M9.5 4h5" />
+                  </svg>
+                </span>
+                <span class="label">Bots</span>
+              </a>
+
+              <a class="nav-link nav-sublink" href="../tools/qr-code-generator/">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1" />
+                    <rect x="14" y="3.5" width="6.5" height="6.5" rx="1" />
+                    <rect x="3.5" y="14" width="6.5" height="6.5" rx="1" />
+                    <path d="M14 14h3v3h-3zM19.5 14h1M14 19.5h1M17.5 17.5h3v3h-3z" />
+                  </svg>
+                </span>
+                <span class="label">QR Code Generator</span>
+              </a>
+            </div>
+          </div>
+
+          <a class="nav-link active" href="../contact-me/" aria-current="page">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="14" rx="2.2" />
+                <path d="m4 7 8 6 8-6" />
+              </svg>
+            </span>
+            <span class="label">Contact Me</span>
+          </a>
+
+        </nav>
       </div>
+    </aside>
 
-      <a class="nav-link" href="../contact-me/">
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <rect x="3" y="5" width="18" height="14" rx="2.2" />
-            <path d="m4 7 8 6 8-6" />
-          </svg>
-        </span>
-        <span class="label">Contact Me</span>
-      </a>
+    <main class="main-content">
+      <div class="projects-content">
 
-    </nav>
-  </div>
-</aside>
+        <h1 class="projects-heading">Contact Me</h1>
 
-<main class="main-content">
-  <div class="projects-content">
+        <div class="contact-grid">
 
-    <h1 class="projects-heading">My Games</h1>
+          <div class="contact-card">
+            <img class="contact-logo" src="../assets/images/telegram.png" alt="Telegram logo" />
+            <p class="contact-detail">@manizamzami</p>
 
-    <div class="projects-list">
-
-      <div class="project-item">
-        <div class="project-item-row">
-          <button
-            type="button"
-            class="project-toggle"
-            aria-expanded="false"
-            aria-controls="project-desc-snake-game"
-            aria-label="Toggle description for Snake Game"
-          >
-            <svg viewBox="0 0 24 24">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            class="project-title"
-            aria-expanded="false"
-            aria-controls="project-desc-snake-game"
-          >
-            Snake Game
-          </button>
-
-          <div class="project-actions">
             <a
               class="open-project-btn"
-              href="snake-game/"
+              href="https://t.me/manizamzami"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Play Snake Game (opens in a new tab)"
-            >Play</a>
+              aria-label="Open Telegram profile (opens in a new tab)"
+            >
+              <span>Open</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 5h5v5" />
+                <path d="M19 5 10 14" />
+                <path d="M19 13v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4" />
+              </svg>
+            </a>
           </div>
-        </div>
-        <div class="project-description" id="project-desc-snake-game">
-          <p>A classic Snake game inspired by the simple snake games found on older mobile phones. Control the snake, avoid hitting the walls and its own body, eat the food such as apples, and keep growing as your score increases. The game becomes more challenging as the snake gets longer and faster.</p>
-          <p>The game is online and does not require installation. It is designed for computers, and the snake is controlled using the arrow keys.</p>
-          <p>More detailed information and instructions are available in the game's own Help/Guide section.</p>
-        </div>
-      </div>
 
-      <div class="project-item">
-        <div class="project-item-row">
-          <button
-            type="button"
-            class="project-toggle"
-            aria-expanded="false"
-            aria-controls="project-desc-chests"
-            aria-label="Toggle description for Chests"
-          >
-            <svg viewBox="0 0 24 24">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
+          <div class="contact-card bale-card">
+            <img class="contact-logo" src="../assets/images/bale.png" alt="Bale logo" />
+            <p class="contact-detail">@manizamzami</p>
 
-          <button
-            type="button"
-            class="project-title"
-            aria-expanded="false"
-            aria-controls="project-desc-chests"
-          >
-            Chests
-          </button>
-
-          <div class="project-actions">
             <a
               class="open-project-btn"
-              href="chests-game/"
+              href="https://ble.ir/manizamzami"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Play Chests (opens in a new tab)"
-            >Play</a>
+              aria-label="Open Bale profile (opens in a new tab)"
+            >
+              <span>Open</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 5h5v5" />
+                <path d="M19 5 10 14" />
+                <path d="M19 13v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4" />
+              </svg>
+            </a>
           </div>
-        </div>
-        <div class="project-description" id="project-desc-chests">
-          <p>Chests is a reasoning and deduction game for 2 to 8 players that can be played together on a single device, such as a phone or computer. The game is designed around logical thinking, deduction, and interaction between players.</p>
-          <p>The game is not publicly available to everyone, and a password is required to play. If you do not have the password and would like to play, please contact us through the website's communication channels. The game is in Persian.</p>
-          <p>More detailed information and instructions are available in the game's own Help/Guide section.</p>
+
+          <div class="contact-card">
+            <img class="contact-logo" src="../assets/images/mail.png" alt="Email logo" />
+            <p class="contact-detail">manizamzami@gmail.com</p>
+
+            <a
+              class="open-project-btn"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=manizamzami@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Send an email to manizamzami@gmail.com (opens in a new tab)"
+            >
+              <span>Send Email</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m4 4 16 8-16 8 3.5-8L4 4Z" />
+                <path d="M7.5 12H20" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="contact-card linkedin-card">
+            <img class="contact-logo" src="../assets/images/linkedin.png" alt="LinkedIn logo" />
+
+            <a
+              class="open-project-btn"
+              href="https://www.linkedin.com/in/mani-zamzami-5570772a8?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open LinkedIn profile (opens in a new tab)"
+            >
+              <span>Open</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 5h5v5" />
+                <path d="M19 5 10 14" />
+                <path d="M19 13v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4" />
+              </svg>
+            </a>
+          </div>
+
         </div>
       </div>
-
-    </div>
-  </div>
-</main>
+    </main>
 
   </div>
 
@@ -1224,7 +1154,9 @@
 
       toggle.addEventListener('click', function () {
         var isCollapsed = sidebar.classList.toggle('collapsed');
+
         toggle.setAttribute('aria-expanded', String(!isCollapsed));
+
         toggle.setAttribute(
           'aria-label',
           isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
@@ -1259,12 +1191,10 @@
 
       drawer.querySelectorAll('.nav-link').forEach(function (link) {
         link.addEventListener('click', function () {
-          // Keep the mobile drawer open when Tools is expanded.
           if (link.classList.contains('nav-toggle')) {
             return;
           }
 
-          // Close the drawer when a navigation item is selected.
           closeDrawer();
         });
       });
@@ -1292,32 +1222,6 @@
 
       initToolsToggle('toolsToggleDesktop', 'toolsSubmenuDesktop');
       initToolsToggle('toolsToggleMobile', 'toolsSubmenuMobile');
-    })();
-
-    // Game item expand / collapse.
-    // Both the arrow button and the game title toggle the same
-    // description. Neither one navigates anywhere — only the
-    // "Play" link does that.
-    (function () {
-      document.querySelectorAll('.project-item').forEach(function (item) {
-        var arrowBtn = item.querySelector('.project-toggle');
-        var titleBtn = item.querySelector('.project-title');
-        var desc = item.querySelector('.project-description');
-
-        if (!arrowBtn || !titleBtn || !desc) return;
-
-        function toggle() {
-          var isOpen = arrowBtn.getAttribute('aria-expanded') === 'true';
-          var next = !isOpen;
-
-          arrowBtn.setAttribute('aria-expanded', String(next));
-          titleBtn.setAttribute('aria-expanded', String(next));
-          desc.classList.toggle('open', next);
-        }
-
-        arrowBtn.addEventListener('click', toggle);
-        titleBtn.addEventListener('click', toggle);
-      });
     })();
   </script>
 

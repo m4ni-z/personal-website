@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e1420">
+<title>صندوق‌های مرموز</title>
+<link rel="icon" type="image/png" href="key.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wood-dark:#2a1a10;
+    --wood:#5a3a22;
+    --wood-light:#8a5a34;
+    --gold:#e8b84b;
+    --gold-bright:#ffd76a;
+    --navy:#0e1420;
+    --navy-2:#171f31;
+    --cream:#f3e6c8;
+    --cream-dim:#d8c69f;
+    --danger:#c0473a;
+    --success:#3a9a5c;
+    --radius:18px;
+    --shadow: 0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;
+    min-height:100%;
+    font-family: "Vazirmatn", Tahoma, "Segoe UI", Arial, sans-serif;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    background:
+      radial-gradient(1200px 800px at 50% -10%, #23324a 0%, transparent 55%),
+      linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 60%, #10151f 100%);
+    color:var(--cream);
+    direction:rtl;
+    text-align:right;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior:none;
+  }
+  #app{
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding:calc(18px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-right, 0px)) calc(34px + env(safe-area-inset-bottom, 0px)) calc(14px + env(safe-area-inset-left, 0px));
+    position:relative;
+    overflow-x:hidden;
+    width:100%;
+  }
+  .screen{
+    width:100%;
+    max-width:560px;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    animation: fadeUp .45s ease;
+  }
+  .screen.active{display:flex;}
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  h1.title{
+    font-size:1.9rem;
+    margin:6px 0 2px;
+    color:var(--gold-bright);
+    text-shadow: 0 2px 10px rgba(0,0,0,.5);
+    letter-spacing:1px;
+  }
+  .subtitle{
+    color:var(--cream-dim);
+    font-size:.95rem;
+    margin-bottom:22px;
+    text-align:center;
+  }
+  .emoji-hero{font-size:3rem; margin-bottom:6px; filter:drop-shadow(0 6px 10px rgba(0,0,0,.5));}
+  .card-panel{
+    width:100%;
+    background: linear-gradient(160deg, rgba(90,58,34,.35), rgba(20,14,10,.55));
+    border:1px solid rgba(232,184,75,.25);
+    border-radius: var(--radius);
+    padding:22px 18px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(2px);
+  }
+  .field-label{
+    font-size:1rem;
+    margin-bottom:10px;
+    color:var(--cream);
+    font-weight:bold;
+  }
+  .player-count-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .count-btn{
+    padding:16px 0;
+    min-height:52px;
+    font-size:1.25rem;
+    font-weight:bold;
+    font-family:inherit;
+    border-radius:14px;
+    border:2px solid rgba(232,184,75,.35);
+    background: rgba(0,0,0,.25);
+    color:var(--cream);
+    cursor:pointer;
+    touch-action: manipulation;
+    -webkit-user-select:none;
+    user-select:none;
+    transition: transform .15s ease, background .2s ease, border-color .2s ease;
+  }
+  .count-btn:active{transform:scale(.94);}
+  .count-btn.selected{
+    background: linear-gradient(160deg, var(--gold-bright), var(--gold));
+    color:#3a2405;
+    border-color: var(--gold-bright);
+    box-shadow: 0 6px 18px rgba(232,184,75,.35);
+  }
+  .btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width:100%;
+    min-height:52px;
+    padding:16px 18px;
+    font-size:1.08rem;
+    font-weight:bold;
+    font-family:inherit;
+    border-radius:14px;
+    border:none;
+    cursor:pointer;
+    color:#2a1a05;
+    background: linear-gradient(160deg, var(--gold-bright), var(--gold));
+    box-shadow: 0 8px 22px rgba(232,184,75,.3);
+    transition: transform .12s ease, filter .2s ease;
+    touch-action: manipulation;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  .btn:active{transform: scale(.97); filter:brightness(.96);}
+  .btn.secondary{
+    background: linear-gradient(160deg, #3a4a63, #232c3c);
+    color:var(--cream);
+    box-shadow: 0 8px 22px rgba(0,0,0,.35);
+    border:1px solid rgba(232,184,75,.25);
+  }
+  .btn:disabled{opacity:.45; cursor:not-allowed;}
+
+  /* ---- player hand-off ---- */
+  .player-badge{
+    width:88px;height:88px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:2.1rem;font-weight:bold;
+    background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--wood-light) 70%, var(--wood-dark));
+    color:#2a1a05;
+    box-shadow: 0 10px 26px rgba(0,0,0,.5), inset 0 0 0 4px rgba(255,255,255,.15);
+    margin-bottom:14px;
+  }
+  .handoff-text{
+    font-size:1.4rem;
+    font-weight:bold;
+    color:var(--gold-bright);
+    margin-bottom:6px;
+    text-align:center;
+  }
+  .handoff-sub{
+    color:var(--cream-dim);
+    margin-bottom:26px;
+    text-align:center;
+    font-size:.92rem;
+  }
+
+  /* ---- boxes grid ---- */
+  .player-header{
+    font-size:1.15rem;
+    font-weight:bold;
+    color:var(--gold-bright);
+    margin-bottom:16px;
+    text-align:center;
+  }
+  .boxes-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:14px;
+    width:100%;
+    margin-bottom:20px;
+  }
+  @media (min-width:480px){
+    .boxes-grid{grid-template-columns: repeat(3, 1fr);}
+  }
+  .box{
+    touch-action: manipulation;
+    -webkit-user-select:none;
+    user-select:none;
+    position:relative;
+    border-radius:16px;
+    min-height:118px;
+    padding:12px 10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:
+      linear-gradient(160deg, var(--wood-light), var(--wood) 55%, var(--wood-dark));
+    border:3px solid #3a2410;
+    box-shadow: 0 8px 16px rgba(0,0,0,.4), inset 0 2px 6px rgba(255,255,255,.08);
+    animation: popIn .4s ease backwards;
+  }
+  .box::before{
+    content:"";
+    position:absolute; inset:6px;
+    border:2px dashed rgba(232,184,75,.35);
+    border-radius:10px;
+    pointer-events:none;
+  }
+  .box .box-num{
+    font-size:.78rem;
+    color:var(--gold-bright);
+    font-weight:bold;
+    margin-bottom:6px;
+  }
+  .box .box-content{
+    font-size:.86rem;
+    line-height:1.5;
+    color:var(--cream);
+  }
+  .box .box-mark{
+    font-size:1.6rem;
+    color:var(--cream-dim);
+  }
+  .box.clue{
+    background: linear-gradient(160deg, #6b4527, #4a2f19 55%, #2a1a10);
+    border-color: var(--gold);
+  }
+  @keyframes popIn{
+    from{opacity:0; transform:scale(.85) translateY(8px);}
+    to{opacity:1; transform:scale(1) translateY(0);}
+  }
+
+  /* ---- timer ---- */
+  .timer-icon{font-size:2.6rem; margin-bottom:6px;}
+  .timer-label{font-size:1.1rem; color:var(--cream-dim); margin-bottom:10px;}
+  .timer-display{
+    font-size:3.4rem;
+    font-weight:bold;
+    letter-spacing:2px;
+    color:var(--gold-bright);
+    text-shadow:0 4px 14px rgba(0,0,0,.5);
+    font-variant-numeric: tabular-nums;
+    margin-bottom:22px;
+  }
+  .timer-display.urgent{color:var(--danger); animation: pulse .8s infinite;}
+  @keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.06);}
+  }
+  .progress-track{
+    width:100%; height:10px; border-radius:6px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden; margin-bottom:24px;
+  }
+  .progress-fill{
+    height:100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+    width:100%;
+    transition: width 1s linear;
+  }
+  .hint-note{
+    color:var(--cream-dim);
+    font-size:.85rem;
+    text-align:center;
+    margin-top:6px;
+  }
+
+  /* ---- selection ---- */
+  .select-box{
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+  .select-box:active{transform: scale(.95);}
+  .select-box .box-mark{font-size:2.2rem;}
+  .select-box .box-num{font-size:.95rem;}
+
+  /* ---- result ---- */
+  .result-box{
+    width:150px;height:150px;
+    border-radius:20px;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    margin: 10px auto 18px;
+    background: linear-gradient(160deg, var(--wood-light), var(--wood) 55%, var(--wood-dark));
+    border:4px solid #3a2410;
+    box-shadow: 0 12px 30px rgba(0,0,0,.5);
+    position:relative;
+    overflow:hidden;
+  }
+  .result-box.opening{ animation: shake .5s ease; }
+  @keyframes shake{
+    0%,100%{transform:rotate(0);}
+    20%{transform:rotate(-4deg);}
+    40%{transform:rotate(4deg);}
+    60%{transform:rotate(-3deg);}
+    80%{transform:rotate(3deg);}
+  }
+  .result-box .lid{
+    position:absolute; top:0; left:0; right:0; height:48%;
+    background: linear-gradient(160deg, var(--wood-light), var(--wood-dark));
+    border-bottom:4px solid #3a2410;
+    transform-origin: top;
+    transition: transform .6s cubic-bezier(.34,1.56,.64,1);
+    z-index:3;
+  }
+  .result-box.open .lid{ transform: rotateX(-115deg) translateY(-6px); }
+  .result-box .contents{
+    font-size:2.6rem;
+    z-index:1;
+  }
+  .result-title{
+    font-size:1.6rem;
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .result-title.win{color:var(--gold-bright);}
+  .result-title.lose{color:var(--cream-dim);}
+  .result-sub{
+    text-align:center;
+    color:var(--cream-dim);
+    margin-bottom:26px;
+    font-size:.95rem;
+  }
+  .sparkle{
+    position:absolute; inset:0; pointer-events:none;
+  }
+  footer.tiny{
+    margin-top:18px;
+    color:rgba(216,198,159,.4);
+    font-size:.72rem;
+    text-align:center;
+  }
+  .pw-input{
+    width:100%;
+    min-height:52px;
+    padding:14px 16px;
+    font-size:1.1rem;
+    font-family:inherit;
+    border-radius:14px;
+    border:2px solid rgba(232,184,75,.35);
+    background: rgba(0,0,0,.25);
+    color:var(--cream);
+    margin-bottom:14px;
+    text-align:center;
+    direction:ltr;
+  }
+  .pw-input:focus{
+    outline:none;
+    border-color: var(--gold-bright);
+  }
+  .pw-error{
+    color:var(--danger);
+    font-size:.9rem;
+    text-align:center;
+    margin-bottom:12px;
+    min-height:1.2em;
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const PUZZLES = {"2":[{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":2},{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":true,"player":1},{"statement":"گنج در صندوق ۱ نیست.","truth":false,"player":2}]},{"treasure":2,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":2},{"statement":"گنج در اولین صندوق نیست.","truth":true,"player":1}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":2},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":true,"player":2},{"statement":"گنج در اولین صندوق نیست.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":true,"player":1},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":2}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":1},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":2}]},{"treasure":1,"boxes":[{"statement":"گنج در اولین صندوق نیست.","truth":false,"player":1},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":true,"player":2}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":true,"player":1},{"statement":"گنج در آخرین صندوق نیست.","truth":false,"player":2}]},{"treasure":1,"boxes":[{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":2},{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":true,"player":1}]},{"treasure":2,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":true,"player":2},{"statement":"گنج در صندوق ۲ نیست.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":true,"player":2}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":true,"player":1},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":2}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":2},{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":true,"player":1}]},{"treasure":2,"boxes":[{"statement":"گنج در یک صندوق زوج است.","truth":true,"player":2},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در اولین یا آخرین صندوق است.","truth":true,"player":2},{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":false,"player":2},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":1}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":1},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":true,"player":2}]},{"treasure":2,"boxes":[{"statement":"گنج در صندوق ۱ نیست.","truth":true,"player":2},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":1},{"statement":"گنج در صندوق ۲ نیست.","truth":true,"player":2}]}],"3":[{"treasure":2,"boxes":[{"statement":"گنج در آخرین صندوق نیست.","truth":true,"player":2},{"statement":"گنج در صندوق ۲ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":false,"player":1}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":1},{"statement":"گنج در اولین صندوق نیست.","truth":true,"player":3},{"statement":"گنج در صندوق ۱ است.","truth":false,"player":2}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۲ نیست.","truth":false,"player":2},{"statement":"گنج در آخرین صندوق نیست.","truth":true,"player":3}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج بین ۱ و ۳ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":true,"player":2}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج بین ۲ و ۳ نیست.","truth":false,"player":1},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":true,"player":2}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":3},{"statement":"گنج در آخرین صندوق نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":true,"player":2}]},{"treasure":1,"boxes":[{"statement":"گنج در اولین یا آخرین صندوق است.","truth":true,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۲ است.","truth":false,"player":3},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":1}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":true,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":true,"player":3},{"statement":"گنج در صندوق ۱ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۲ است.","truth":false,"player":1}]},{"treasure":2,"boxes":[{"statement":"گنج در آخرین صندوق نیست.","truth":true,"player":3},{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۳.","truth":false,"player":1}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":true,"player":2},{"statement":"گنج در آخرین صندوق نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":3}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق ۱ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":true,"player":2},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":3}]},{"treasure":2,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":1},{"statement":"شماره صندوق گنج بزرگ‌تر از ۲ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":true,"player":2}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":1},{"statement":"گنج در صندوق ۳ است.","truth":true,"player":2}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج بین ۱ و ۳ نیست.","truth":false,"player":2},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":3},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":true,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":2},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":true,"player":1},{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":false,"player":3}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":2},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":3},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۳ است.","truth":true,"player":1},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":3},{"statement":"گنج در اولین صندوق نیست.","truth":false,"player":2}]},{"treasure":2,"boxes":[{"statement":"گنج در صندوق ۱ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":3},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":2}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":true,"player":3},{"statement":"گنج در صندوق ۳ نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":2}]}],"4":[{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج بین ۲ و ۳ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":true,"player":1},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":3}]},{"treasure":4,"boxes":[{"statement":"گنج در آخرین صندوق نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۴ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۳ نیست.","truth":true,"player":3},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":false,"player":2}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۴.","truth":false,"player":1},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۴ نیست.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۳ نیست.","truth":true,"player":3}]},{"treasure":4,"boxes":[{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":1},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":true,"player":3},{"statement":"گنج در صندوق ۴ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج بین ۱ و ۴ نیست.","truth":false,"player":4}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج بین ۲ و ۴ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۲ یا صندوق ۴ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":2}]},{"treasure":2,"boxes":[{"statement":"گنج در صندوق‌های ۲، ۳ یا ۴ نیست.","truth":false,"player":1},{"statement":"گنج در صندوق ۴ نیست.","truth":true,"player":2},{"statement":"گنج در صندوق ۲ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":3}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق ۳ نیست.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۴.","truth":false,"player":1},{"statement":"گنج در صندوق ۲ یا صندوق ۴ است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":true,"player":2}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":true,"player":1},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":4},{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":false,"player":2}]},{"treasure":4,"boxes":[{"statement":"گنج در آخرین صندوق نیست.","truth":false,"player":1},{"statement":"گنج در صندوق ۴ نیست.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ نیست.","truth":true,"player":4},{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":2}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۳ نیست.","truth":true,"player":1},{"statement":"گنج بین صندوق ۱ تا صندوق ۳ است (شامل خودشان).","truth":false,"player":2}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۴ نیست.","truth":false,"player":1},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":true,"player":4},{"statement":"شماره صندوق گنج بین ۲ و ۴ نیست.","truth":false,"player":2}]},{"treasure":2,"boxes":[{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۳.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۲ یا صندوق ۴ است.","truth":true,"player":4},{"statement":"گنج در صندوق ۲ نیست.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۴ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":2}]},{"treasure":4,"boxes":[{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۴.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۲، ۳ یا ۴ نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۳ نیست.","truth":true,"player":4},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":3}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق ۲ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج بین ۳ و ۴ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۲ است.","truth":true,"player":4},{"statement":"شماره صندوق گنج بین ۲ و ۳ نیست.","truth":false,"player":1}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق ۱ است.","truth":false,"player":4},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":3},{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":true,"player":1}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":true,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۱ نیست.","truth":false,"player":1}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج ۴ یا کوچک‌تر است.","truth":true,"player":3},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":4},{"statement":"شماره صندوق گنج بین ۱ و ۴ نیست.","truth":false,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۱ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":true,"player":1},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":3},{"statement":"گنج در اولین صندوق نیست.","truth":false,"player":4}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":true,"player":3},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۳ نیست.","truth":false,"player":4},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":1}]}],"5":[{"treasure":5,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":5},{"statement":"گنج بین صندوق ۱ تا صندوق ۵ است (شامل خودشان).","truth":true,"player":3},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۵ نیست.","truth":false,"player":1}]},{"treasure":5,"boxes":[{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":5},{"statement":"گنج در صندوق‌های ۲، ۴ یا ۵ نیست.","truth":false,"player":3},{"statement":"گنج در صندوق ۱ است.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۳ نیست.","truth":true,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":4}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":true,"player":1},{"statement":"گنج در صندوق ۲ یا صندوق ۴ است.","truth":false,"player":3},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۴.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۲.","truth":false,"player":5},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":4}]},{"treasure":5,"boxes":[{"statement":"شماره صندوق گنج بین ۲ و ۵ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":4},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":5},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":1}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۳ نیست.","truth":false,"player":5},{"statement":"گنج بین صندوق ۱ تا صندوق ۵ است (شامل خودشان).","truth":true,"player":1},{"statement":"شماره صندوق گنج بین ۲ و ۳ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج بین ۲ و ۵ نیست.","truth":false,"player":2}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":2},{"statement":"شماره صندوق گنج بین ۲ و ۴ نیست.","truth":false,"player":4},{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":false,"player":5},{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":true,"player":1}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":false,"player":5},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":1},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۴.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ یا صندوق ۵ است.","truth":false,"player":4}]},{"treasure":5,"boxes":[{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۵.","truth":false,"player":4},{"statement":"گنج در آخرین صندوق نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":true,"player":1},{"statement":"گنج در صندوق ۱ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۵ نیست.","truth":false,"player":5}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":true,"player":4},{"statement":"شماره صندوق گنج بین ۲ و ۴ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۴ نیست.","truth":false,"player":5},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":1}]},{"treasure":5,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":true,"player":3},{"statement":"گنج نه در صندوق ۴ است و نه در صندوق ۵.","truth":false,"player":5},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۴ و ۵ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۵ نیست.","truth":false,"player":2}]},{"treasure":4,"boxes":[{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":5},{"statement":"گنج بین صندوق ۱ تا صندوق ۳ است (شامل خودشان).","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۳ نیست.","truth":true,"player":3},{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":1},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":4}]},{"treasure":4,"boxes":[{"statement":"گنج در صندوق ۱ نیست.","truth":true,"player":1},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۵ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":false,"player":5},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":2}]},{"treasure":3,"boxes":[{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۵.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":2},{"statement":"گنج در صندوق‌های ۲، ۳ یا ۴ نیست.","truth":false,"player":1},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۳.","truth":false,"player":5},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":4}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۲ نیست.","truth":true,"player":5},{"statement":"گنج در صندوق ۲ یا صندوق ۵ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۴ است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۲ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":4}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":4},{"statement":"شماره صندوق گنج بین ۳ و ۴ نیست.","truth":true,"player":2},{"statement":"شماره صندوق گنج ۴ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"گنج بین صندوق ۳ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":5},{"statement":"گنج در اولین صندوق نیست.","truth":false,"player":3}]},{"treasure":5,"boxes":[{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":4},{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":true,"player":5},{"statement":"گنج نه در صندوق ۴ است و نه در صندوق ۵.","truth":false,"player":1},{"statement":"گنج در آخرین صندوق نیست.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":2}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":3},{"statement":"گنج در اولین صندوق نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۳ نیست.","truth":false,"player":5},{"statement":"گنج در آخرین صندوق نیست.","truth":true,"player":4},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":2}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":false,"player":5},{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":true,"player":4},{"statement":"گنج در صندوق‌های ۲، ۳ یا ۴ نیست.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۴.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۳ و ۴ نیست.","truth":false,"player":3}]},{"treasure":1,"boxes":[{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ یا صندوق ۵ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":false,"player":4},{"statement":"شماره صندوق گنج بین ۱ و ۳ نیست.","truth":false,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۳ است.","truth":true,"player":2}]},{"treasure":4,"boxes":[{"statement":"گنج در صندوق ۱ است.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۴ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج بزرگ‌تر از ۴ است.","truth":false,"player":4},{"statement":"شماره صندوق گنج کوچک‌تر از ۵ است.","truth":true,"player":5},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":1}]}],"6":[{"treasure":6,"boxes":[{"statement":"گنج در صندوق ۱ نیست.","truth":true,"player":3},{"statement":"گنج در صندوق ۴ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۱ یا صندوق ۵ است.","truth":false,"player":6},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":4},{"statement":"شماره صندوق گنج ۵ یا کوچک‌تر است.","truth":false,"player":5},{"statement":"گنج بین صندوق ۳ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":2}]},{"treasure":1,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":6},{"statement":"گنج بین صندوق ۲ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":3},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۴ نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۴ و ۶ نیست.","truth":true,"player":2},{"statement":"شماره صندوق گنج ۶ یا بزرگ‌تر است.","truth":false,"player":5}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":false,"player":6},{"statement":"شماره صندوق گنج ۲ یا بزرگ‌تر است.","truth":false,"player":5},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۵.","truth":false,"player":3},{"statement":"گنج در صندوق‌های ۱، ۴ یا ۵ نیست.","truth":false,"player":2},{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":true,"player":4}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":6},{"statement":"شماره صندوق گنج ۶ یا بزرگ‌تر است.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":5},{"statement":"گنج در صندوق‌های ۲، ۳ یا ۶ نیست.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۶.","truth":true,"player":3}]},{"treasure":2,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۶.","truth":true,"player":2},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":false,"player":6},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۵ نیست.","truth":false,"player":5},{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۵.","truth":false,"player":3},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":1}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۳ یا صندوق ۶ است.","truth":false,"player":6},{"statement":"گنج در صندوق ۵ یا صندوق ۶ است.","truth":false,"player":2},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":1},{"statement":"گنج در یک صندوق زوج است.","truth":true,"player":4},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":3}]},{"treasure":6,"boxes":[{"statement":"شماره صندوق گنج بین ۴ و ۶ نیست.","truth":false,"player":1},{"statement":"گنج در صندوق ۵ است.","truth":false,"player":2},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":6},{"statement":"گنج در صندوق ۲ یا صندوق ۵ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۵.","truth":true,"player":3}]},{"treasure":1,"boxes":[{"statement":"گنج بین صندوق ۲ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":2},{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":false,"player":5},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۴.","truth":false,"player":3},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۴ نیست.","truth":false,"player":1},{"statement":"گنج در صندوق ۵ است.","truth":false,"player":6},{"statement":"گنج بین صندوق ۱ تا صندوق ۶ است (شامل خودشان).","truth":true,"player":4}]},{"treasure":3,"boxes":[{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۶.","truth":true,"player":1},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":false,"player":6},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":false,"player":5},{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":false,"player":3}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۲ نیست.","truth":true,"player":5},{"statement":"گنج در صندوق ۳ یا صندوق ۵ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۱ یا صندوق ۳ است.","truth":false,"player":6},{"statement":"گنج در صندوق ۱ است.","truth":false,"player":2},{"statement":"شماره صندوق گنج بین ۴ و ۵ نیست.","truth":false,"player":3}]},{"treasure":5,"boxes":[{"statement":"گنج در صندوق ۵ نیست.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۵ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۱، ۴ یا ۵ نیست.","truth":false,"player":5},{"statement":"شماره صندوق گنج بزرگ‌تر از ۱ است.","truth":true,"player":6},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۵.","truth":false,"player":3},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":1}]},{"treasure":2,"boxes":[{"statement":"گنج در صندوق‌های ۱، ۲ یا ۶ نیست.","truth":false,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۶ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۴.","truth":true,"player":6},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۵.","truth":false,"player":2},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":3}]},{"treasure":4,"boxes":[{"statement":"گنج در صندوق ۵ یا صندوق ۶ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۱ یا صندوق ۶ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۱ یا بزرگ‌تر است.","truth":true,"player":6},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۴ است و نه در صندوق ۵.","truth":false,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۵ است.","truth":false,"player":4}]},{"treasure":6,"boxes":[{"statement":"گنج در صندوق ۵ است.","truth":false,"player":6},{"statement":"شماره صندوق گنج ۵ یا کوچک‌تر است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۴.","truth":true,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":3},{"statement":"گنج در صندوق‌های ۲، ۴ یا ۶ نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":4}]},{"treasure":5,"boxes":[{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":2},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":3},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":5},{"statement":"شماره صندوق گنج بین ۴ و ۵ نیست.","truth":false,"player":6},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۶.","truth":true,"player":1}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۳ یا صندوق ۶ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":true,"player":6},{"statement":"گنج در صندوق ۵ یا صندوق ۶ است.","truth":false,"player":3},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۴.","truth":false,"player":5},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":1}]},{"treasure":2,"boxes":[{"statement":"گنج در آخرین صندوق نیست.","truth":true,"player":2},{"statement":"گنج در صندوق ۱ یا صندوق ۵ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":3},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۶.","truth":false,"player":5},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۴ نیست.","truth":false,"player":6},{"statement":"شماره صندوق گنج بین ۲ و ۳ نیست.","truth":false,"player":4}]},{"treasure":2,"boxes":[{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۵.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۴.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۴ و ۶ نیست.","truth":true,"player":5},{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":6},{"statement":"گنج در صندوق‌های ۲، ۳ یا ۶ نیست.","truth":false,"player":4}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":true,"player":5},{"statement":"گنج در صندوق ۴ است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":6},{"statement":"شماره صندوق گنج بزرگ‌تر از ۵ است.","truth":false,"player":4},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":3}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج ۶ یا کوچک‌تر است.","truth":true,"player":5},{"statement":"شماره صندوق گنج بین ۳ و ۶ نیست.","truth":false,"player":6},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":4},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۶ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج بزرگ‌تر از ۴ است.","truth":false,"player":1}]}],"7":[{"treasure":7,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":false,"player":5},{"statement":"شماره صندوق گنج کوچک‌تر از ۷ است.","truth":false,"player":7},{"statement":"گنج در صندوق ۷ نیست.","truth":false,"player":2},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":1},{"statement":"گنج در صندوق‌های ۱، ۴ یا ۶ نیست.","truth":true,"player":4},{"statement":"شماره صندوق گنج کوچک‌تر از ۶ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ یا صندوق ۵ است.","truth":false,"player":6}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج ۵ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"گنج نه در صندوق ۵ است و نه در صندوق ۷.","truth":true,"player":5},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":4},{"statement":"شماره صندوق گنج بزرگ‌تر از ۴ است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۶.","truth":false,"player":7},{"statement":"گنج در صندوق ۲ یا صندوق ۷ است.","truth":false,"player":6},{"statement":"شماره صندوق گنج بین ۲ و ۵ نیست.","truth":false,"player":3}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۳ نیست.","truth":false,"player":6},{"statement":"شماره صندوق گنج بین ۴ و ۷ نیست.","truth":true,"player":5},{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":7},{"statement":"گنج در صندوق ۷ است.","truth":false,"player":2},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۴ تا صندوق ۶ است (شامل خودشان).","truth":false,"player":4}]},{"treasure":3,"boxes":[{"statement":"گنج نه در صندوق ۴ است و نه در صندوق ۵.","truth":true,"player":4},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":7},{"statement":"شماره صندوق گنج بین ۳ و ۴ نیست.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۶.","truth":false,"player":3},{"statement":"گنج در صندوق‌های ۳، ۴ یا ۶ نیست.","truth":false,"player":6},{"statement":"شماره صندوق گنج ۵ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۷ نیست.","truth":false,"player":5}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج ۷ یا بزرگ‌تر است.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ یا صندوق ۵ است.","truth":false,"player":7},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۷ نیست.","truth":true,"player":2},{"statement":"گنج در صندوق‌های ۲، ۵ یا ۶ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۲ نیست.","truth":false,"player":6},{"statement":"گنج در صندوق‌های ۲، ۳ یا ۶ نیست.","truth":false,"player":1}]},{"treasure":7,"boxes":[{"statement":"گنج نه در صندوق ۵ است و نه در صندوق ۷.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۲، ۵ یا ۶ نیست.","truth":true,"player":1},{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۷ نیست.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۷.","truth":false,"player":7},{"statement":"گنج در صندوق ۵ یا صندوق ۶ است.","truth":false,"player":6},{"statement":"شماره صندوق گنج ۴ یا کوچک‌تر است.","truth":false,"player":3}]},{"treasure":1,"boxes":[{"statement":"شماره صندوق گنج ۶ یا بزرگ‌تر است.","truth":false,"player":1},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":true,"player":6},{"statement":"گنج بین صندوق ۵ تا صندوق ۷ است (شامل خودشان).","truth":false,"player":4},{"statement":"گنج در صندوق ۱ نیست.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۴.","truth":false,"player":7},{"statement":"گنج بین صندوق ۳ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":5}]},{"treasure":3,"boxes":[{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۶.","truth":false,"player":4},{"statement":"گنج در صندوق ۲ یا صندوق ۵ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۱ یا صندوق ۵ است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۴.","truth":false,"player":3},{"statement":"گنج در صندوق‌های ۳، ۴ یا ۷ نیست.","truth":false,"player":5},{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":true,"player":6},{"statement":"گنج در صندوق ۳ نیست.","truth":false,"player":7}]},{"treasure":3,"boxes":[{"statement":"شماره صندوق گنج بین ۲ و ۵ نیست.","truth":false,"player":4},{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":2},{"statement":"گنج در صندوق ۷ نیست.","truth":true,"player":6},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":false,"player":5},{"statement":"شماره صندوق گنج بزرگ‌تر از ۳ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۳ و ۴ نیست.","truth":false,"player":3},{"statement":"گنج در صندوق‌های ۳، ۴ یا ۷ نیست.","truth":false,"player":7}]},{"treasure":7,"boxes":[{"statement":"گنج در صندوق ۳ یا صندوق ۵ است.","truth":false,"player":4},{"statement":"گنج بین صندوق ۲ تا صندوق ۷ است (شامل خودشان).","truth":true,"player":6},{"statement":"گنج در صندوق ۴ است.","truth":false,"player":3},{"statement":"شماره صندوق گنج کوچک‌تر از ۶ است.","truth":false,"player":1},{"statement":"گنج بین صندوق ۱ تا صندوق ۳ است (شامل خودشان).","truth":false,"player":7},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":5},{"statement":"گنج بین صندوق ۲ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":2}]},{"treasure":6,"boxes":[{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":2},{"statement":"گنج در صندوق ۲ یا صندوق ۵ است.","truth":false,"player":6},{"statement":"شماره صندوق گنج بین ۳ و ۴ نیست.","truth":true,"player":3},{"statement":"شماره صندوق گنج ۱ یا کوچک‌تر است.","truth":false,"player":1},{"statement":"گنج در صندوق ۴ است.","truth":false,"player":5},{"statement":"گنج بین صندوق ۲ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":7},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":4}]},{"treasure":5,"boxes":[{"statement":"گنج در صندوق ۴ است.","truth":false,"player":5},{"statement":"شماره صندوق گنج بین ۲ و ۴ نیست.","truth":true,"player":4},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۵.","truth":false,"player":2},{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":6},{"statement":"گنج در صندوق ۴ یا صندوق ۷ است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":7},{"statement":"شماره صندوق گنج بین ۲ و ۵ نیست.","truth":false,"player":1}]},{"treasure":5,"boxes":[{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":4},{"statement":"شماره صندوق گنج بزرگ‌تر از ۶ است.","truth":false,"player":7},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۲ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":1},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":5},{"statement":"شماره صندوق گنج بین ۴ و ۵ نیست.","truth":false,"player":6},{"statement":"گنج بین صندوق ۱ تا صندوق ۶ است (شامل خودشان).","truth":true,"player":2}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق ۲ است.","truth":false,"player":2},{"statement":"شماره صندوق گنج بین ۳ و ۴ نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۷ یا بزرگ‌تر است.","truth":false,"player":6},{"statement":"گنج در صندوق‌های ۳، ۵ یا ۶ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۳ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج ۷ یا کوچک‌تر است.","truth":true,"player":5},{"statement":"شماره صندوق گنج بین ۲ و ۶ نیست.","truth":false,"player":7}]},{"treasure":5,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۶ است.","truth":false,"player":1},{"statement":"گنج نه در صندوق ۴ است و نه در صندوق ۵.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۱، ۴ یا ۵ نیست.","truth":false,"player":5},{"statement":"گنج در صندوق ۷ نیست.","truth":true,"player":6},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":3},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۵.","truth":false,"player":7},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":2}]},{"treasure":7,"boxes":[{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":6},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":7},{"statement":"گنج بین صندوق ۴ تا صندوق ۶ است (شامل خودشان).","truth":false,"player":4},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":2},{"statement":"شماره صندوق گنج بین ۴ و ۷ نیست.","truth":false,"player":1},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۴.","truth":true,"player":3},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":5}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق ۴ نیست.","truth":true,"player":6},{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۳ یا صندوق ۵ است.","truth":false,"player":7},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۶.","truth":false,"player":5},{"statement":"گنج بین صندوق ۲ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":3},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":4}]},{"treasure":6,"boxes":[{"statement":"گنج در صندوق ۶ نیست.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۶.","truth":false,"player":5},{"statement":"شماره صندوق گنج بین ۲ و ۶ نیست.","truth":false,"player":1},{"statement":"گنج بین صندوق ۵ تا صندوق ۷ است (شامل خودشان).","truth":true,"player":6},{"statement":"گنج در صندوق ۵ یا صندوق ۷ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۵، ۶ یا ۷ نیست.","truth":false,"player":7}]},{"treasure":5,"boxes":[{"statement":"گنج نه در صندوق ۴ است و نه در صندوق ۵.","truth":false,"player":1},{"statement":"گنج نه در صندوق ۵ است و نه در صندوق ۷.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۵.","truth":false,"player":6},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":7},{"statement":"گنج در صندوق‌های ۱، ۳ یا ۵ نیست.","truth":false,"player":5},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۱، ۴ یا ۶ نیست.","truth":true,"player":3}]},{"treasure":5,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":true,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":6},{"statement":"گنج در صندوق‌های ۲، ۵ یا ۶ نیست.","truth":false,"player":4},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":7},{"statement":"گنج در صندوق ۳ یا صندوق ۷ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ یا صندوق ۶ است.","truth":false,"player":2},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":1}]}],"8":[{"treasure":5,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۸ است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۶ تا صندوق ۸ است (شامل خودشان).","truth":false,"player":2},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":false,"player":5},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۶ نیست.","truth":true,"player":1},{"statement":"گنج در صندوق ۲ یا صندوق ۷ است.","truth":false,"player":8},{"statement":"گنج در صندوق ۷ یا صندوق ۸ است.","truth":false,"player":6},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":7},{"statement":"گنج در یک صندوق زوج است.","truth":false,"player":4}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج بین ۱ و ۵ نیست.","truth":false,"player":4},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":5},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":6},{"statement":"گنج در صندوق ۶ است.","truth":false,"player":8},{"statement":"گنج در صندوق‌های ۲، ۴ یا ۵ نیست.","truth":false,"player":7},{"statement":"گنج در صندوق‌های ۱، ۲ یا ۶ نیست.","truth":false,"player":2},{"statement":"گنج در صندوق ۱ است.","truth":false,"player":1},{"statement":"گنج بین صندوق ۱ تا صندوق ۳ است (شامل خودشان).","truth":true,"player":3}]},{"treasure":2,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۴ است.","truth":false,"player":4},{"statement":"گنج بین صندوق ۶ تا صندوق ۸ است (شامل خودشان).","truth":false,"player":8},{"statement":"گنج در صندوق‌های ۳، ۵ یا ۸ نیست.","truth":true,"player":3},{"statement":"گنج در صندوق ۱ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۳ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج بین ۱ و ۲ نیست.","truth":false,"player":6},{"statement":"گنج در صندوق ۵ یا صندوق ۶ است.","truth":false,"player":7},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":2}]},{"treasure":6,"boxes":[{"statement":"گنج در اولین یا آخرین صندوق است.","truth":false,"player":6},{"statement":"گنج نه در صندوق ۶ است و نه در صندوق ۷.","truth":false,"player":5},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۶.","truth":false,"player":7},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":false,"player":4},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۳.","truth":true,"player":3},{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۶.","truth":false,"player":2},{"statement":"گنج در صندوق ۵ یا صندوق ۷ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۴ است.","truth":false,"player":8}]},{"treasure":1,"boxes":[{"statement":"گنج در صندوق‌های ۱، ۴ یا ۸ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۷ است.","truth":false,"player":8},{"statement":"گنج در صندوق ۱ نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج بزرگ‌تر از ۶ است.","truth":false,"player":2},{"statement":"گنج بین صندوق ۵ تا صندوق ۸ است (شامل خودشان).","truth":false,"player":6},{"statement":"شماره صندوق گنج بین ۱ و ۷ نیست.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ است.","truth":false,"player":7},{"statement":"گنج بین صندوق ۱ تا صندوق ۶ است (شامل خودشان).","truth":true,"player":5}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق‌های ۱، ۳ یا ۴ نیست.","truth":false,"player":4},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":5},{"statement":"شماره صندوق گنج بزرگ‌تر از ۷ است.","truth":false,"player":3},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۶.","truth":false,"player":1},{"statement":"گنج در صندوق ۴ یا صندوق ۸ است.","truth":false,"player":6},{"statement":"شماره صندوق گنج ۷ یا کوچک‌تر است.","truth":true,"player":8},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۳.","truth":false,"player":7},{"statement":"گنج در صندوق ۶ یا صندوق ۷ است.","truth":false,"player":2}]},{"treasure":8,"boxes":[{"statement":"شماره صندوق گنج ۵ یا کوچک‌تر است.","truth":false,"player":2},{"statement":"شماره صندوق گنج ۳ یا بزرگ‌تر است.","truth":true,"player":1},{"statement":"گنج در صندوق ۳ یا صندوق ۷ است.","truth":false,"player":7},{"statement":"گنج در صندوق‌های ۳، ۵ یا ۸ نیست.","truth":false,"player":3},{"statement":"گنج نه در صندوق ۶ است و نه در صندوق ۸.","truth":false,"player":8},{"statement":"شماره صندوق گنج بین ۵ و ۸ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۴ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۱ یا صندوق ۲ است.","truth":false,"player":6}]},{"treasure":4,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۵ است.","truth":false,"player":4},{"statement":"گنج در صندوق‌های ۴، ۷ یا ۸ نیست.","truth":false,"player":1},{"statement":"گنج در صندوق‌های ۳، ۴ یا ۸ نیست.","truth":false,"player":3},{"statement":"گنج در اولین یا آخرین صندوق است.","truth":false,"player":7},{"statement":"گنج در صندوق ۶ یا صندوق ۸ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۵ است.","truth":false,"player":2},{"statement":"شماره صندوق گنج بین ۲ و ۶ نیست.","truth":false,"player":8},{"statement":"گنج در صندوق ۶ نیست.","truth":true,"player":6}]},{"treasure":3,"boxes":[{"statement":"گنج نه در صندوق ۱ است و نه در صندوق ۵.","truth":true,"player":1},{"statement":"شماره صندوق گنج بین ۳ و ۷ نیست.","truth":false,"player":5},{"statement":"گنج بین صندوق ۴ تا صندوق ۶ است (شامل خودشان).","truth":false,"player":6},{"statement":"گنج نه در صندوق ۳ است و نه در صندوق ۷.","truth":false,"player":3},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":8},{"statement":"گنج در صندوق ۷ یا صندوق ۸ است.","truth":false,"player":7},{"statement":"گنج در صندوق ۶ یا صندوق ۷ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۶ یا صندوق ۸ است.","truth":false,"player":2}]},{"treasure":8,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۴ است.","truth":false,"player":5},{"statement":"گنج در صندوق‌های ۲، ۷ یا ۸ نیست.","truth":false,"player":1},{"statement":"شماره صندوق گنج کوچک‌تر از ۷ است.","truth":false,"player":2},{"statement":"گنج بین صندوق ۱ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":3},{"statement":"گنج در صندوق ۴ یا صندوق ۸ است.","truth":true,"player":7},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":8},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":6},{"statement":"گنج بین صندوق ۲ تا صندوق ۶ است (شامل خودشان).","truth":false,"player":4}]},{"treasure":8,"boxes":[{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۶.","truth":true,"player":8},{"statement":"شماره صندوق گنج بین ۵ و ۸ نیست.","truth":false,"player":1},{"statement":"گنج بین صندوق ۲ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":3},{"statement":"شماره صندوق گنج کوچک‌تر از ۲ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۴ یا صندوق ۷ است.","truth":false,"player":2},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":6},{"statement":"گنج در صندوق‌های ۲، ۵ یا ۸ نیست.","truth":false,"player":7},{"statement":"گنج بین صندوق ۱ تا صندوق ۶ است (شامل خودشان).","truth":false,"player":4}]},{"treasure":8,"boxes":[{"statement":"گنج در صندوق ۷ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":2},{"statement":"گنج بین صندوق ۱ تا صندوق ۵ است (شامل خودشان).","truth":false,"player":8},{"statement":"گنج در صندوق ۱ یا صندوق ۸ است.","truth":true,"player":4},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۶ یا کوچک‌تر است.","truth":false,"player":6},{"statement":"گنج بین صندوق ۱ تا صندوق ۷ است (شامل خودشان).","truth":false,"player":5},{"statement":"گنج در صندوق ۳ یا صندوق ۵ است.","truth":false,"player":7}]},{"treasure":2,"boxes":[{"statement":"گنج در صندوق ۲ نیست.","truth":false,"player":8},{"statement":"گنج در یک صندوق فرد است.","truth":false,"player":1},{"statement":"گنج در صندوق‌های ۲، ۵ یا ۸ نیست.","truth":false,"player":2},{"statement":"گنج در صندوق‌های ۵، ۶ یا ۷ نیست.","truth":true,"player":6},{"statement":"گنج بین صندوق ۴ تا صندوق ۶ است (شامل خودشان).","truth":false,"player":7},{"statement":"شماره صندوق گنج بین ۱ و ۲ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۱ یا صندوق ۴ است.","truth":false,"player":3},{"statement":"گنج بین صندوق ۳ تا صندوق ۸ است (شامل خودشان).","truth":false,"player":5}]},{"treasure":5,"boxes":[{"statement":"شماره صندوق گنج بزرگ‌تر از ۶ است.","truth":false,"player":1},{"statement":"گنج در صندوق‌های ۵، ۶ یا ۷ نیست.","truth":false,"player":6},{"statement":"گنج در صندوق ۳ یا صندوق ۷ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ یا صندوق ۳ است.","truth":false,"player":8},{"statement":"گنج در صندوق ۴ یا صندوق ۷ است.","truth":false,"player":5},{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":2},{"statement":"گنج در صندوق ۶ یا صندوق ۸ است.","truth":false,"player":7},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۳.","truth":true,"player":4}]},{"treasure":4,"boxes":[{"statement":"گنج در صندوق ۳ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ یا صندوق ۶ است.","truth":false,"player":6},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۴.","truth":false,"player":1},{"statement":"شماره صندوق گنج ۳ یا کوچک‌تر است.","truth":false,"player":7},{"statement":"گنج در صندوق ۱ یا صندوق ۳ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۷ است.","truth":false,"player":4},{"statement":"شماره صندوق گنج ۴ یا بزرگ‌تر است.","truth":true,"player":8},{"statement":"شماره صندوق گنج بین ۲ و ۷ نیست.","truth":false,"player":2}]},{"treasure":2,"boxes":[{"statement":"گنج در صندوق‌های ۲، ۳ یا ۸ نیست.","truth":false,"player":2},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":8},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۷.","truth":false,"player":5},{"statement":"شماره صندوق گنج بین ۱ و ۷ نیست.","truth":false,"player":3},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":1},{"statement":"گنج بین صندوق ۲ تا صندوق ۴ است (شامل خودشان).","truth":true,"player":7},{"statement":"شماره صندوق گنج ۶ یا بزرگ‌تر است.","truth":false,"player":6},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":4}]},{"treasure":3,"boxes":[{"statement":"گنج در صندوق‌های ۱، ۷ یا ۸ نیست.","truth":true,"player":1},{"statement":"گنج بین صندوق ۶ تا صندوق ۸ است (شامل خودشان).","truth":false,"player":2},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":7},{"statement":"شماره صندوق گنج ۲ یا کوچک‌تر است.","truth":false,"player":6},{"statement":"شماره صندوق گنج بین ۱ و ۶ نیست.","truth":false,"player":5},{"statement":"شماره صندوق گنج بین ۲ و ۷ نیست.","truth":false,"player":4},{"statement":"گنج در صندوق ۴ یا صندوق ۵ است.","truth":false,"player":8},{"statement":"گنج در صندوق ۴ یا صندوق ۷ است.","truth":false,"player":3}]},{"treasure":7,"boxes":[{"statement":"گنج بین صندوق ۳ تا صندوق ۶ است (شامل خودشان).","truth":false,"player":7},{"statement":"شماره صندوق گنج کوچک‌تر از ۳ است.","truth":false,"player":2},{"statement":"گنج نه در صندوق ۲ است و نه در صندوق ۵.","truth":true,"player":4},{"statement":"گنج در صندوق‌های ۱، ۶ یا ۷ نیست.","truth":false,"player":6},{"statement":"گنج در صندوق ۳ یا صندوق ۸ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۱ یا صندوق ۸ است.","truth":false,"player":8},{"statement":"شماره صندوق گنج ۴ یا کوچک‌تر است.","truth":false,"player":5},{"statement":"گنج در صندوق‌های ۴، ۷ یا ۸ نیست.","truth":false,"player":3}]},{"treasure":8,"boxes":[{"statement":"شماره صندوق گنج کوچک‌تر از ۸ است.","truth":false,"player":7},{"statement":"گنج در صندوق ۶ یا صندوق ۷ است.","truth":false,"player":5},{"statement":"گنج در صندوق ۴ یا صندوق ۸ است.","truth":true,"player":6},{"statement":"گنج در صندوق‌های ۳، ۴ یا ۸ نیست.","truth":false,"player":3},{"statement":"گنج در صندوق ۲ یا صندوق ۵ است.","truth":false,"player":4},{"statement":"گنج در صندوق ۷ است.","truth":false,"player":1},{"statement":"گنج در صندوق ۴ یا صندوق ۶ است.","truth":false,"player":8},{"statement":"گنج در صندوق‌های ۲، ۷ یا ۸ نیست.","truth":false,"player":2}]},{"treasure":8,"boxes":[{"statement":"گنج در صندوق ۱ یا صندوق ۳ است.","truth":false,"player":8},{"statement":"گنج در صندوق ۳ یا صندوق ۴ است.","truth":false,"player":4},{"statement":"گنج بین صندوق ۵ تا صندوق ۷ است (شامل خودشان).","truth":false,"player":5},{"statement":"گنج در صندوق ۵ یا صندوق ۷ است.","truth":false,"player":3},{"statement":"گنج در صندوق ۳ است.","truth":false,"player":1},{"statement":"گنج بین صندوق ۲ تا صندوق ۸ است (شامل خودشان).","truth":true,"player":6},{"statement":"شماره صندوق گنج کوچک‌تر از ۵ است.","truth":false,"player":7},{"statement":"گنج بین صندوق ۱ تا صندوق ۴ است (شامل خودشان).","truth":false,"player":2}]}]}
+;
+</script>
+<script>
+(function(){
+"use strict";
+
+const FA_DIGITS = {'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹'};
+function fa(n){ return String(n).split('').map(c => FA_DIGITS[c] !== undefined ? FA_DIGITS[c] : c).join(''); }
+
+const TOTAL_SECONDS = 10 * 60;
+const APP_PASSWORD = "mani1391";
+
+let state = {
+  playerCount: null,
+  puzzle: null,
+  currentReveal: 1,      // which player is currently on the handoff/reveal screens
+  timerRemaining: TOTAL_SECONDS,
+  timerHandle: null,
+  chosenBox: null,
+  lastPuzzleIndex: {}    // per playerCount, index of last used puzzle to avoid immediate repeat
+};
+
+const app = document.getElementById('app');
+
+function el(tag, opts){
+  opts = opts || {};
+  const e = document.createElement(tag);
+  if(opts.cls) e.className = opts.cls;
+  if(opts.text !== undefined) e.textContent = opts.text;
+  if(opts.html !== undefined) e.innerHTML = opts.html;
+  if(opts.attrs){
+    for(const k in opts.attrs) e.setAttribute(k, opts.attrs[k]);
+  }
+  if(opts.style) Object.assign(e.style, opts.style);
+  if(opts.onclick) e.addEventListener('click', opts.onclick);
+  if(opts.children){
+    opts.children.forEach(c => { if(c) e.appendChild(c); });
+  }
+  return e;
+}
+
+function clearApp(){
+  app.innerHTML = '';
+}
+
+function render(screenEl){
+  clearApp();
+  screenEl.classList.add('screen', 'active');
+  app.appendChild(screenEl);
+}
+
+/* ---------------------------------------------------------
+   SCREEN 0: password gate
+--------------------------------------------------------- */
+function screenPassword(){
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'emoji-hero', text:'🔒'}));
+  wrap.appendChild(el('h1', {cls:'title', text:'ورود به بازی'}));
+  wrap.appendChild(el('div', {cls:'subtitle', text:'لطفاً رمز عبور را وارد کنید'}));
+
+  const panel = el('div', {cls:'card-panel'});
+  panel.appendChild(el('div', {cls:'field-label', text:'رمز عبور'}));
+
+  const input = el('input', {cls:'pw-input', attrs:{type:'password', placeholder:'رمز عبور را وارد کنید', autocomplete:'off', inputmode:'text'}});
+  panel.appendChild(input);
+
+  const errorMsg = el('div', {cls:'pw-error', text:''});
+  panel.appendChild(errorMsg);
+
+  const submitBtn = el('button', {cls:'btn', text:'🔓 ورود'});
+  function tryEnter(){
+    if(input.value === APP_PASSWORD){
+      screenSetup();
+    } else {
+      errorMsg.textContent = 'رمز عبور اشتباه است. دوباره تلاش کنید.';
+      input.value = '';
+      input.focus();
+    }
+  }
+  submitBtn.addEventListener('click', tryEnter);
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') tryEnter();
+  });
+  panel.appendChild(submitBtn);
+  wrap.appendChild(panel);
+
+  render(wrap);
+  setTimeout(() => input.focus(), 50);
+}
+
+/* ---------------------------------------------------------
+   SCREEN 1: setup - choose player count
+--------------------------------------------------------- */
+function screenSetup(){
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'emoji-hero', text:'🗝️'}));
+  wrap.appendChild(el('h1', {cls:'title', text:'صندوق‌های مرموز'}));
+  wrap.appendChild(el('div', {cls:'subtitle', text:'یک بازی گروهی منطقی برای پیدا کردن گنج پنهان'}));
+
+  const ruleBox = el('div', {cls:'card-panel', style:{marginBottom:'16px', padding:'16px 16px'}});
+  ruleBox.appendChild(el('div', {cls:'field-label', text:'⚖️ قانون طلایی بازی'}));
+  ruleBox.appendChild(el('div', {cls:'hint-note', style:{fontSize:'.88rem', margin:'0'},
+    text:'روی هر صندوق یک جمله نوشته شده. از بین همهٔ جمله‌های همهٔ صندوق‌ها، دقیقاً یکی راست است و بقیه دروغ‌اند. توجه: صندوقی که جملهٔ راست روی آن است، لزوماً صندوق گنج نیست! با ترکیب جمله‌ها و همین قانون، صندوق گنج را پیدا کنید.'}));
+  wrap.appendChild(ruleBox);
+
+  const panel = el('div', {cls:'card-panel'});
+  panel.appendChild(el('div', {cls:'field-label', text:'تعداد بازیکنان را انتخاب کنید'}));
+
+  const grid = el('div', {cls:'player-count-grid'});
+  let selected = null;
+  const buttons = [];
+  for(let n = 2; n <= 8; n++){
+    const b = el('button', {cls:'count-btn', text:fa(n)});
+    b.addEventListener('click', () => {
+      selected = n;
+      buttons.forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      startBtn.disabled = false;
+    });
+    buttons.push(b);
+    grid.appendChild(b);
+  }
+  panel.appendChild(grid);
+
+  const startBtn = el('button', {cls:'btn', text:'🎲 شروع بازی'});
+  startBtn.disabled = true;
+  startBtn.addEventListener('click', () => {
+    if(!selected) return;
+    beginGame(selected);
+  });
+  panel.appendChild(startBtn);
+  wrap.appendChild(panel);
+
+  wrap.appendChild(el('footer', {cls:'tiny', text:'گوشی را بین بازیکنان دست‌به‌دست کنید — هرکس فقط نوبت خودش را ببیند'}));
+
+  render(wrap);
+}
+
+function beginGame(n){
+  state.playerCount = n;
+  const bank = PUZZLES[String(n)];
+  let idx = Math.floor(Math.random() * bank.length);
+  const last = state.lastPuzzleIndex[n];
+  if(bank.length > 1 && idx === last){
+    idx = (idx + 1) % bank.length;
+  }
+  state.lastPuzzleIndex[n] = idx;
+  state.puzzle = bank[idx];
+  state.currentReveal = 1;
+  state.chosenBox = null;
+  state.timerRemaining = TOTAL_SECONDS;
+  screenHandoff(1);
+}
+
+/* ---------------------------------------------------------
+   SCREEN 2: handoff "player X come"
+--------------------------------------------------------- */
+function screenHandoff(playerNum){
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'player-badge', text: fa(playerNum)}));
+  wrap.appendChild(el('div', {cls:'handoff-text', text: `بازیکن ${fa(playerNum)} بیاید`}));
+  wrap.appendChild(el('div', {cls:'handoff-sub', text: 'گوشی را به این بازیکن بدهید. بقیه لطفاً نگاه نکنند 🙈'}));
+
+  const btn = el('button', {cls:'btn', text:'👁️ مشاهده اطلاعات'});
+  btn.addEventListener('click', () => screenPlayerBoxes(playerNum));
+  wrap.appendChild(btn);
+
+  render(wrap);
+}
+
+/* ---------------------------------------------------------
+   SCREEN 3: show this player's boxes (only their clues visible)
+--------------------------------------------------------- */
+function screenPlayerBoxes(playerNum){
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'player-header', text: `🔍 اطلاعات بازیکن ${fa(playerNum)}`}));
+
+  const grid = el('div', {cls:'boxes-grid'});
+  state.puzzle.boxes.forEach((boxData, i) => {
+    const boxNum = i + 1;
+    const isMine = boxData.player === playerNum;
+    const box = el('div', {
+      cls: 'box' + (isMine ? ' clue' : ''),
+      style: { animationDelay: (i * 0.06) + 's' }
+    });
+    box.appendChild(el('div', {cls:'box-num', text:`صندوق ${fa(boxNum)}`}));
+    if(isMine){
+      box.appendChild(el('div', {cls:'box-content', text: boxData.statement}));
+    } else {
+      box.appendChild(el('div', {cls:'box-mark', text:'؟'}));
+    }
+    grid.appendChild(box);
+  });
+  wrap.appendChild(grid);
+
+  const btn = el('button', {cls:'btn', text:'✅ دیدم، نفر بعد'});
+  btn.addEventListener('click', () => {
+    if(playerNum < state.playerCount){
+      screenHandoff(playerNum + 1);
+    } else {
+      screenDiscussion();
+    }
+  });
+  wrap.appendChild(btn);
+  wrap.appendChild(el('div', {cls:'hint-note', text:'فقط جمله‌های خودتان را دیدید. یادتان باشد: از تمام جمله‌ها فقط یکی راست است!'}));
+
+  render(wrap);
+}
+
+/* ---------------------------------------------------------
+   SCREEN 4: discussion timer
+--------------------------------------------------------- */
+function formatTime(sec){
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return fa(String(m).padStart(2,'0')) + ':' + fa(String(s).padStart(2,'0'));
+}
+
+function screenDiscussion(){
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'timer-icon', text:'🧠'}));
+  wrap.appendChild(el('div', {cls:'timer-label', text:'زمان بحث و استدلال گروهی'}));
+
+  const timerDisplay = el('div', {cls:'timer-display', text: formatTime(state.timerRemaining)});
+  wrap.appendChild(timerDisplay);
+
+  const track = el('div', {cls:'progress-track'});
+  const fill = el('div', {cls:'progress-fill'});
+  track.appendChild(fill);
+  wrap.appendChild(track);
+
+  wrap.appendChild(el('div', {cls:'subtitle', html:'جمله‌های خودتان را برای بقیه بخوانید. یادتان باشد: فقط یکی از همهٔ جمله‌ها راست است و بقیه دروغ‌اند — صندوق دارای جملهٔ راست لزوماً صندوق گنج نیست!'}));
+
+  const skipBtn = el('button', {cls:'btn secondary', text:'⏭️ پایان زودهنگام بحث'});
+  skipBtn.addEventListener('click', () => {
+    stopTimer();
+    screenSelect();
+  });
+  wrap.appendChild(skipBtn);
+
+  render(wrap);
+
+  stopTimer();
+  const totalStart = state.timerRemaining;
+  state.timerHandle = setInterval(() => {
+    state.timerRemaining--;
+    if(state.timerRemaining <= 0){
+      state.timerRemaining = 0;
+      timerDisplay.textContent = formatTime(0);
+      fill.style.width = '0%';
+      stopTimer();
+      screenTimeUp();
+      return;
+    }
+    timerDisplay.textContent = formatTime(state.timerRemaining);
+    fill.style.width = (state.timerRemaining / totalStart * 100) + '%';
+    if(state.timerRemaining <= 30){
+      timerDisplay.classList.add('urgent');
+    }
+  }, 1000);
+}
+
+function stopTimer(){
+  if(state.timerHandle){
+    clearInterval(state.timerHandle);
+    state.timerHandle = null;
+  }
+}
+
+function screenTimeUp(){
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'timer-icon', text:'⏰'}));
+  wrap.appendChild(el('div', {cls:'handoff-text', text:'زمان تمام شد!'}));
+  wrap.appendChild(el('div', {cls:'handoff-sub', text:'وقت انتخاب صندوق گنج رسیده...'}));
+  render(wrap);
+  setTimeout(() => screenSelect(), 1400);
+}
+
+/* ---------------------------------------------------------
+   SCREEN 5: choose a box
+--------------------------------------------------------- */
+function screenSelect(){
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'emoji-hero', text:'🏴‍☠️'}));
+  wrap.appendChild(el('div', {cls:'player-header', text:'گنج در کدام صندوق است؟'}));
+
+  const grid = el('div', {cls:'boxes-grid'});
+  state.puzzle.boxes.forEach((boxData, i) => {
+    const boxNum = i + 1;
+    const box = el('div', {
+      cls: 'box select-box',
+      style: { animationDelay: (i * 0.05) + 's' }
+    });
+    box.appendChild(el('div', {cls:'box-num', text:`صندوق ${fa(boxNum)}`}));
+    box.appendChild(el('div', {cls:'box-mark', text:'📦'}));
+    box.addEventListener('click', () => {
+      state.chosenBox = boxNum;
+      screenReveal(boxNum);
+    });
+    grid.appendChild(box);
+  });
+  wrap.appendChild(grid);
+  wrap.appendChild(el('div', {cls:'hint-note', text:'روی صندوقی که فکر می‌کنید گنج داخل آن است بزنید.'}));
+
+  render(wrap);
+}
+
+/* ---------------------------------------------------------
+   SCREEN 6: open box + result
+--------------------------------------------------------- */
+function screenReveal(boxNum){
+  const won = boxNum === state.puzzle.treasure;
+
+  const wrap = el('div');
+  wrap.appendChild(el('div', {cls:'player-header', text:`صندوق ${fa(boxNum)}`}));
+
+  const resultBox = el('div', {cls:'result-box'});
+  const lid = el('div', {cls:'lid'});
+  const contents = el('div', {cls:'contents', text:''});
+  resultBox.appendChild(lid);
+  resultBox.appendChild(contents);
+  wrap.appendChild(resultBox);
+
+  const title = el('div', {cls:'result-title', text:''});
+  const sub = el('div', {cls:'result-sub', text:''});
+  wrap.appendChild(title);
+  wrap.appendChild(sub);
+
+  const againBtn = el('button', {cls:'btn', text:'🔄 بازی دوباره'});
+  againBtn.style.display = 'none';
+  againBtn.addEventListener('click', () => screenSetup());
+  wrap.appendChild(againBtn);
+
+  const revealTreasureNote = el('div', {cls:'hint-note', text:''});
+  wrap.appendChild(revealTreasureNote);
+
+  render(wrap);
+
+  setTimeout(() => {
+    resultBox.classList.add('opening');
+  }, 250);
+
+  setTimeout(() => {
+    resultBox.classList.remove('opening');
+    resultBox.classList.add('open');
+    if(won){
+      contents.textContent = '✨🪙✨';
+      title.textContent = 'گنج را پیدا کردید!';
+      title.classList.add('win');
+      sub.textContent = '🏆 برنده شدید! استدلال گروهی جواب داد.';
+    } else {
+      contents.textContent = '📦';
+      title.textContent = 'صندوق خالی است!';
+      title.classList.add('lose');
+      sub.textContent = '❌ باختید. گنج در صندوق دیگری بود.';
+      revealTreasureNote.textContent = `گنج واقعی در صندوق ${fa(state.puzzle.treasure)} بود.`;
+    }
+    againBtn.style.display = 'flex';
+  }, 900);
+}
+
+/* ---------------------------------------------------------
+   init
+--------------------------------------------------------- */
+screenPassword();
+
+})();
+
+</script>
+</body>
+</html>
