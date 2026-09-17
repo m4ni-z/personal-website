@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>خانه‌ای برای بحران</title>
+
+<link rel="icon" type="image/png" href="images/logo.png" />
+
+<style>
+  /* =============================================================
+     Local font
+     Loaded from /fonts, no external or Google font is used.
+  ============================================================= */
+  @font-face {
+    font-family: "SeminarFont";
+    src: url("fonts/font.woff") format("woff");
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* =============================================================
+     Design tokens
+     Palette and background language are the only elements carried
+     over from the reference. Layout, components and structure
+     below are built from scratch.
+  ============================================================= */
+  :root {
+    --c-black: #000000;
+    --c-abyss: #020617;
+    --c-navy: #061b4f;
+    --c-royal: #0a3d91;
+    --c-blue: #008cff;
+    --c-cyan: #00c8ff;
+    --c-violet: #5b4dff;
+
+    --text-primary: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.55);
+
+    --font-fa: "SeminarFont", Tahoma, "Segoe UI", sans-serif;
+
+    --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--c-black);
+    color: var(--text-primary);
+    font-family: var(--font-fa);
+    overflow-x: hidden;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  /* =============================================================
+     Ambient background
+  ============================================================= */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(170deg, var(--c-black) 0%, var(--c-abyss) 55%, #010208 100%);
+    overflow: hidden;
+  }
+
+  .backdrop__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(105px);
+    will-change: transform;
+  }
+
+  .backdrop__glow--center {
+    width: 46vw;
+    height: 46vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 50% 50%, rgba(10, 61, 145, 0.4), rgba(10, 61, 145, 0) 70%);
+    animation: driftCenter 50s ease-in-out infinite;
+  }
+
+  .backdrop__glow--corner-a {
+    width: 50vw;
+    height: 50vw;
+    top: -16vw;
+    right: -14vw;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 140, 255, 0.3), rgba(0, 140, 255, 0) 70%);
+    animation: driftA 44s ease-in-out infinite;
+  }
+
+  .backdrop__glow--corner-b {
+    width: 42vw;
+    height: 42vw;
+    bottom: -14vw;
+    left: -12vw;
+    background: radial-gradient(circle at 50% 50%, rgba(91, 77, 255, 0.22), rgba(91, 77, 255, 0) 70%);
+    animation: driftB 58s ease-in-out infinite;
+  }
+
+  @keyframes driftCenter {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.12);
+    }
+  }
+
+  @keyframes driftA {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(-4vw, 4vh) scale(1.07);
+    }
+  }
+
+  @keyframes driftB {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(4vw, -3vh) scale(1.05);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .backdrop__glow {
+      animation: none;
+    }
+  }
+
+  /* =============================================================
+     Hero — logo, title, subtitle, sitting toward the top of the
+     page. The description panel follows directly below it.
+  ============================================================= */
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 9vh 6vw 4vh;
+    padding-top: max(9vh, env(safe-area-inset-top));
+    text-align: center;
+  }
+
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: min(90vw, 900px);
+    margin: 0 auto;
+  }
+
+  .hero__logo {
+    width: clamp(88px, 15vw, 220px);
+    height: auto;
+    margin-bottom: clamp(18px, 3vh, 30px);
+    filter: drop-shadow(0 0 28px rgba(0, 160, 255, 0.35));
+    opacity: 0;
+    transform: translateY(10px);
+    animation: riseIn 1s var(--ease-soft) 0.15s forwards;
+  }
+
+  .hero__title {
+    margin: 0;
+    font-weight: 700;
+    font-size: clamp(1.7rem, 6.4vw, 4.6rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    text-shadow: 0 0 70px rgba(0, 160, 255, 0.22);
+    white-space: nowrap;
+    max-width: 100%;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: riseIn 1s var(--ease-soft) 0.35s forwards;
+  }
+
+  .hero__subtitle {
+    margin: clamp(14px, 2.4vh, 22px) 0 0;
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.9vw, 1.15rem);
+    color: var(--text-secondary);
+    max-width: 46ch;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: riseIn 1s var(--ease-soft) 0.55s forwards;
+  }
+
+  @keyframes riseIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__logo,
+    .hero__title,
+    .hero__subtitle {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* =============================================================
+     Description — reserved, currently empty panel for the text
+     that will be added later.
+  ============================================================= */
+  .description {
+    display: flex;
+    justify-content: center;
+    padding: 0 6vw 8vh;
+  }
+
+  .description__panel {
+    width: 100%;
+    max-width: 860px;
+    min-height: 30vh;
+    border-radius: 20px;
+    border: 1px solid rgba(180, 205, 255, 0.14);
+    background: rgba(8, 14, 30, 0.28);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 20px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  /* =============================================================
+     Responsive fine-tuning
+     Font sizing itself is handled fluidly by clamp() and, for the
+     title, by the measured auto-fit script below. These
+     breakpoints correct spacing and logo proportions that don't
+     scale on their own across common phone widths.
+  ============================================================= */
+  @media (max-width: 430px) {
+    .hero {
+      padding-top: max(7vh, env(safe-area-inset-top));
+    }
+
+    .hero__logo {
+      width: clamp(74px, 26vw, 130px);
+      margin-bottom: 14px;
+    }
+
+    .hero__subtitle {
+      line-height: 1.75;
+    }
+
+    .description__panel {
+      min-height: 24vh;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .hero {
+      padding-left: 5vw;
+      padding-right: 5vw;
+    }
+
+    .description {
+      padding-left: 5vw;
+      padding-right: 5vw;
+    }
+  }
+
+  @media (max-height: 480px) and (orientation: landscape) {
+    .hero {
+      padding-top: max(5vh, env(safe-area-inset-top));
+      padding-bottom: 3vh;
+    }
+
+    .hero__logo {
+      width: clamp(56px, 10vw, 100px);
+      margin-bottom: 10px;
+    }
+
+    .description__panel {
+      min-height: 20vh;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Ambient background: color palette / theme only, taken from the reference -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop__glow backdrop__glow--center"></div>
+    <div class="backdrop__glow backdrop__glow--corner-a"></div>
+    <div class="backdrop__glow backdrop__glow--corner-b"></div>
+  </div>
+
+  <main class="hero">
+    <div class="hero__inner">
+      <img
+        class="hero__logo"
+        src="images/logo.png"
+        alt="لوگوی سمینار خانه‌ای برای بحران"
+        id="heroLogo"
+      />
+      <h1 class="hero__title" id="heroTitle">خانه‌ای برای بحران</h1>
+      <p class="hero__subtitle">سمینار ۴۰، مدرسه راهنمایی علامه حلی ۱ تهران</p>
+    </div>
+  </main>
+
+  <!-- Reserved space for the description; content will be added later -->
+  <section class="description" aria-label="توضیحات">
+    <div class="description__panel"></div>
+  </section>
+
+  <script>
+    // Keeps "خانه‌ای برای بحران" on a single line at any viewport width by
+    // measuring the rendered text and shrinking it only as much as
+    // needed, instead of relying on font-size guesses alone.
+    (function () {
+      "use strict";
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var title = document.getElementById("heroTitle");
+        var logo = document.getElementById("heroLogo");
+
+        if (logo) {
+          logo.addEventListener("error", function () {
+            logo.remove();
+          });
+        }
+
+        if (!title) {
+          return;
+        }
+
+        var container = title.parentElement;
+        var MIN_FONT_SIZE = 15; // px floor, keeps the title legible
+        var resizeTimer = null;
+
+        function fitTitleToContainer() {
+          // Reset to the CSS-defined size before measuring, so growing
+          // the viewport (e.g. rotating a phone) can size back up again.
+          title.style.fontSize = "";
+
+          var availableWidth = container.clientWidth;
+          var currentSize = parseFloat(window.getComputedStyle(title).fontSize);
+          var safetyCounter = 80;
+
+          while (
+            title.scrollWidth > availableWidth &&
+            currentSize > MIN_FONT_SIZE &&
+            safetyCounter > 0
+          ) {
+            currentSize -= 1;
+            title.style.fontSize = currentSize + "px";
+            safetyCounter -= 1;
+          }
+        }
+
+        function scheduleFit() {
+          window.clearTimeout(resizeTimer);
+          resizeTimer = window.setTimeout(fitTitleToContainer, 120);
+        }
+
+        fitTitleToContainer();
+        window.addEventListener("resize", scheduleFit);
+        window.addEventListener("orientationchange", scheduleFit);
+
+        // Re-measure once the local font has actually finished loading —
+        // its metrics can differ from the fallback font used before that.
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(fitTitleToContainer);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
