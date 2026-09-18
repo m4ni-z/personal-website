@@ -20,6 +20,14 @@
     font-display: swap;
   }
 
+  @font-face {
+    font-family: "SeminarFont2";
+    src: url("fonts/font2.woff") format("woff");
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
   /* =============================================================
      Design tokens
      Palette and background language are the only elements carried
@@ -39,6 +47,7 @@
     --text-secondary: rgba(255, 255, 255, 0.55);
 
     --font-fa: "SeminarFont", Tahoma, "Segoe UI", sans-serif;
+    --font-fa-2: "SeminarFont2", Tahoma, "Segoe UI", sans-serif;
 
     --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -301,6 +310,253 @@
       min-height: 20vh;
     }
   }
+
+  /* =============================================================
+     ADDED — content that fills the previously empty description
+     panel. Reuses the existing color tokens, font and easing
+     curve; nothing above this block was changed.
+  ============================================================= */
+
+  .content-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(30px, 4.5vw, 46px);
+    padding: clamp(30px, 5.5vw, 60px) clamp(20px, 6vw, 64px);
+    font-family: var(--font-fa-2);
+  }
+
+  .content-text {
+    margin: 0;
+    font-family: var(--font-fa-2);
+    font-weight: 400;
+    font-size: clamp(0.95rem, 1.65vw, 1.12rem);
+    line-height: 2.05;
+    color: var(--text-primary);
+    text-align: justify;
+    text-align-last: right;
+  }
+
+  .content-heading {
+    margin: 0;
+    font-family: var(--font-fa);
+    font-weight: 700;
+    font-size: clamp(1.35rem, 3.4vw, 2.1rem);
+    line-height: 1.4;
+    color: var(--text-primary);
+    text-shadow: 0 0 40px rgba(0, 160, 255, 0.18);
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2.4vw, 20px);
+    padding-right: clamp(14px, 2vw, 20px);
+    border-right: 2px solid rgba(0, 200, 255, 0.35);
+  }
+
+  .step__heading {
+    margin: 0;
+    font-family: var(--font-fa-2);
+    font-weight: 700;
+    font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+    line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  .content-figure {
+    margin: 0;
+  }
+
+  .content-img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(180, 205, 255, 0.12);
+    object-fit: cover;
+  }
+
+  .image-pair {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(12px, 2.4vw, 20px);
+  }
+
+  .image-pair .content-figure {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+
+  .continue-btn-row {
+    display: flex;
+    justify-content: center;
+    padding-top: clamp(4px, 1vw, 10px);
+  }
+
+  .continue-btn {
+    appearance: none;
+    border: 1px solid rgba(180, 205, 255, 0.22);
+    border-radius: 999px;
+    padding: clamp(12px, 2vw, 15px) clamp(34px, 6vw, 52px);
+    font-family: var(--font-fa-2);
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    color: var(--text-primary);
+    background: linear-gradient(135deg, rgba(0, 140, 255, 0.9), rgba(0, 200, 255, 0.75));
+    box-shadow: 0 14px 34px rgba(0, 140, 255, 0.28);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft),
+      filter 0.25s var(--ease-soft), opacity 0.35s var(--ease-soft);
+  }
+
+  .continue-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 42px rgba(0, 160, 255, 0.36);
+    filter: brightness(1.06);
+  }
+
+  .continue-btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 8px 20px rgba(0, 140, 255, 0.3);
+  }
+
+  .continue-btn:focus-visible {
+    outline: 2px solid var(--c-cyan);
+    outline-offset: 3px;
+  }
+
+  /* Rest of the content stays out of the layout entirely until the
+     "ادامه" button reveals it. */
+  .rest-content[hidden] {
+    display: none;
+  }
+
+  .rest-content {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(30px, 4.5vw, 46px);
+  }
+
+  /* Entrance animation for each added block, mirroring the hero's
+     gentle rise but arriving from above as the section scrolls in. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(-18px);
+    transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
+  }
+
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .content-wrap {
+      gap: 26px;
+      padding: 26px 18px;
+    }
+
+    .rest-content {
+      gap: 26px;
+    }
+
+    .content-text {
+      line-height: 1.95;
+    }
+
+    .step {
+      padding-right: 12px;
+    }
+
+    .image-pair {
+      flex-direction: column;
+    }
+
+    .image-pair .content-figure {
+      flex-basis: auto;
+    }
+  }
+
+  /* =============================================================
+     ADDED — back-to-top button. Fixed to the bottom-right corner
+     (right side, matching the RTL layout), slides in from the
+     right once the description content has scrolled into view.
+  ============================================================= */
+  .back-to-top {
+    position: fixed;
+    right: clamp(16px, 4vw, 28px);
+    bottom: max(clamp(16px, 4vw, 28px), calc(env(safe-area-inset-bottom) + 14px));
+    z-index: 40;
+
+    width: clamp(44px, 6vw, 52px);
+    height: clamp(44px, 6vw, 52px);
+    border: 1px solid rgba(180, 205, 255, 0.22);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(135deg, rgba(0, 140, 255, 0.9), rgba(0, 200, 255, 0.75));
+    box-shadow: 0 14px 34px rgba(0, 140, 255, 0.3);
+    color: var(--text-primary);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+
+    opacity: 0;
+    transform: translateX(130%);
+    visibility: hidden;
+    transition: opacity 0.5s var(--ease-soft), transform 0.5s var(--ease-soft),
+      visibility 0s linear 0.5s, box-shadow 0.25s var(--ease-soft), filter 0.25s var(--ease-soft);
+  }
+
+  .back-to-top.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+    transition: opacity 0.5s var(--ease-soft), transform 0.5s var(--ease-soft),
+      visibility 0s linear 0s, box-shadow 0.25s var(--ease-soft), filter 0.25s var(--ease-soft);
+  }
+
+  .back-to-top:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 18px 42px rgba(0, 160, 255, 0.38);
+  }
+
+  .back-to-top:active {
+    transform: translateX(0) scale(0.93);
+  }
+
+  .back-to-top:focus-visible {
+    outline: 2px solid var(--c-cyan);
+    outline-offset: 3px;
+  }
+
+  .back-to-top svg {
+    width: 46%;
+    height: 46%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .back-to-top {
+      transition: opacity 0.2s linear, visibility 0s linear;
+    }
+
+    .back-to-top.is-visible {
+      transition: opacity 0.2s linear, visibility 0s linear;
+    }
+  }
 </style>
 </head>
 <body>
@@ -322,12 +578,93 @@
       />
       <h1 class="hero__title" id="heroTitle">خانه‌ای برای بحران</h1>
       <p class="hero__subtitle">سمینار ۴۰، مدرسه راهنمایی علامه حلی ۱ تهران</p>
+      <p class="hero__subtitle">مانی زمزمی</p>
     </div>
   </main>
 
-  <!-- Reserved space for the description; content will be added later -->
+  <!-- Reserved space for the description; content added below -->
   <section class="description" aria-label="توضیحات">
-    <div class="description__panel"></div>
+    <div class="description__panel">
+      <!-- ===== ADDED: everything inside this wrapper is new ===== -->
+      <div class="content-wrap">
+
+        <div class="intro-block" id="introBlock">
+        <p class="content-text reveal">
+          پروژه «خانه‌ای برای بحران» 🏠 در واقع یک خانه‌ی پیش‌ساخته و قابل حمل است که برای شرایط بحرانی مثل زلزله و مناطقی که نیاز به اسکان سریع دارند طراحی شده است. 🚨 ایده‌ی اصلی این است که خانه به‌جای اینکه به‌صورت یکپارچه ساخته شود، از قطعات جدا تشکیل شده باشد و در محل موردنظر سرهم شود. این کار باعث می‌شود تعداد بیشتری از این واحدها در یک کامیون قابل حمل باشند 🚛 و هزینه و دشواری حمل‌ونقل هم کاهش پیدا کند. یکی از ویژگی‌های مهم این طرح این است که برای نصب، به جرثقیل یا فونداسیون و زیرسازی معمولی نیاز ندارد؛ پایه‌های قابل تنظیم آن امکان استقرار سازه را حتی روی زمین‌های شیب‌دار، سنگی و ناهموار فراهم می‌کنند. از طرف دیگر، برق موردنیاز آن با پنل خورشیدی تأمین می‌شود ☀️🔋؛ بنابراین برای استفاده از آن نیازی به اتصال به شبکه‌ی برق شهری نیست. در واقع این طرح چیزی بین چادرهای امدادی ⛺ و خانه‌های پیش‌ساخته‌ی معمولی است؛ یعنی از چادرهای امدادی مقاوم‌تر و مجهزتر، اما در مقایسه با خانه‌های پیش‌ساخته‌ی سنگین، حمل و نصب ساده‌تر و کم‌هزینه‌تری دارد. در پایان نیز یک نمونه از سازه ساخته می‌شود 🔧 تا مواردی مانند استحکام، سهولت مونتاژ و عملکرد سیستم تأمین انرژی خورشیدی مورد بررسی قرار بگیرند. البته نمونه‌ی ساخته‌شده در ابعاد کوچک‌تر از اندازه‌ی واقعی خانه خواهد بود و در واقع یک مدل کوچک‌شده از سازه محسوب می‌شود
+        </p>
+
+        <div class="continue-btn-row reveal">
+          <button type="button" class="continue-btn" id="continueBtn" aria-expanded="false" aria-controls="restContent">ادامه</button>
+        </div>
+        </div>
+        <!-- /#introBlock -->
+
+        <!-- Hidden until the "ادامه" button is clicked -->
+        <div class="rest-content" id="restContent" hidden>
+
+          <h2 class="content-heading reveal">مراحل ساخت</h2>
+
+          <div class="step reveal">
+            <h3 class="step__heading">مرحله ۱: طراحی</h3>
+            <p class="content-text">
+              در مرحله نخست، تمامی قطعات موردنیاز پروژه به‌صورت جداگانه و با دقت در نرم‌افزار سالیدورکس طراحی و مدل‌سازی شدند. در این مرحله، ابعاد و ویژگی‌های هندسی هر یک از قطعات مطابق با طرح و نیاز پروژه در نظر گرفته شد تا از صحت و هماهنگی آن‌ها اطمینان حاصل شود. پس از تکمیل طراحی قطعات، مدل‌های ایجادشده در محیط اسمبلی کنار یکدیگر قرار گرفتند و فرایند مونتاژ کردن مجموعه آغاز شد. در این محیط، قطعات با استفاده از قیدها و روابط مناسب در موقعیت صحیح نسبت به یکدیگر قرار گرفتند تا مجموعه نهایی شکل بگیرد. در پایان نیز نحوه قرارگیری و هماهنگی قطعات با یکدیگر بررسی شد تا از صحت ساختار مجموعه و مطابقت آن با طراحی اولیه اطمینان حاصل شود.
+            </p>
+            <figure class="content-figure">
+              <img class="content-img" src="images/picture1.png" alt="مرحله طراحی سازه در نرم‌افزار" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="step reveal" id="step2">
+            <h3 class="step__heading">مرحله ۲: ساخت جداگانه قطعات به وسیله لیزر</h3>
+            <p class="content-text">
+              در ابتدا، نقشه‌های دقیق و موردنیاز برای برش قطعات با فرمت دی ایکس اف طراحی و آماده‌سازی شدند. در این مرحله، ابعاد و اندازه‌های قطعات با توجه به طراحی اولیه و مقیاس موردنظر تعیین شد تا برش‌ها با دقت و کمترین میزان خطا انجام شوند. پس از تکمیل و بررسی نقشه‌ها، فایل‌های طراحی‌شده به دستگاه برش لیزر منتقل شدند و هر یک از قطعات به‌صورت جداگانه و مطابق با ابعاد مشخص‌شده برش داده شدند.
+            </p>
+            <p class="content-text">
+              قطعات این سازه از دو جنس چوب و پلکسی‌گلاس ساخته شده‌اند و ضخامت هر دو نوع قطعه ۲٫۸ میلی‌متر در نظر گرفته شده است. همچنین، تمامی ابعاد سازه با رعایت مقیاس ۱:۱۰ طراحی و اجرا شده‌اند تا تناسب میان قطعات و ابعاد کلی سازه حفظ شود. در نهایت، پس از اتمام عملیات برش، قطعات آماده‌ی مرحله مونتاژ و سرهم‌بندی سازه شدند.
+            </p>
+            <figure class="content-figure">
+              <img class="content-img" src="images/picture2.jpg" alt="برش قطعات با دستگاه لیزر" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="step reveal">
+            <h3 class="step__heading">مرحله ۳: بسته‌بندی</h3>
+            <p class="content-text">قطعات در حالت بهینه بسته بندی شده اند.</p>
+            <figure class="content-figure">
+              <img class="content-img" src="images/picture3.png" alt="بسته‌بندی قطعات سازه" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="step reveal">
+            <h3 class="step__heading">مرحله ۴: آماده سازی تجهیزات الکتریکی</h3>
+            <div class="image-pair">
+              <figure class="content-figure">
+                <img class="content-img" src="images/picture4.jpeg" alt="آماده‌سازی تجهیزات الکتریکی، تصویر اول" loading="lazy" />
+              </figure>
+              <figure class="content-figure">
+                <img class="content-img" src="images/picture5.jpeg" alt="آماده‌سازی تجهیزات الکتریکی، تصویر دوم" loading="lazy" />
+              </figure>
+            </div>
+          </div>
+
+          <div class="step reveal">
+            <h3 class="step__heading">مرحله ۵: مونتاژ</h3>
+            <figure class="content-figure">
+              <img class="content-img" src="images/picture6.jpeg" alt="مونتاژ سازه" loading="lazy" />
+            </figure>
+          </div>
+
+          <h2 class="content-heading reveal">راهنمای نصب</h2>
+          <figure class="content-figure reveal">
+            <img class="content-img" src="images/picture7.jpg" alt="راهنمای نصب سازه" loading="lazy" />
+          </figure>
+
+        </div>
+        <!-- /#restContent -->
+
+      </div>
+      <!-- ===== END ADDED ===== -->
+    </div>
   </section>
 
   <script>
@@ -392,6 +729,221 @@
       });
     })();
   </script>
+
+  <!-- ===== ADDED: "ادامه" reveal + scroll-in animation for the new content ===== -->
+  <script>
+    (function () {
+      "use strict";
+
+      // Waits until every <img> inside `scope` has finished loading (or
+      // failed) before calling `cb`. Without this, the browser measures
+      // element positions while images are still 0px tall, so sections
+      // lower on the page briefly sit inside the viewport and the
+      // IntersectionObserver below marks them "seen" immediately —
+      // which is why the animation used to look like it only ran once,
+      // right on page load, and never again while actually scrolling.
+      function whenImagesReady(scope, cb) {
+        var imgs = scope.querySelectorAll("img");
+        var pending = imgs.length;
+
+        if (!pending) {
+          cb();
+          return;
+        }
+
+        function settle() {
+          pending -= 1;
+          if (pending <= 0) {
+            cb();
+          }
+        }
+
+        imgs.forEach(function (img) {
+          if (img.complete) {
+            settle();
+          } else {
+            img.addEventListener("load", settle, { once: true });
+            img.addEventListener("error", settle, { once: true });
+          }
+        });
+      }
+
+      // Starts watching the not-yet-revealed ".reveal" elements inside
+      // `scope` and fades each one in the moment it actually scrolls
+      // into view.
+      function observeReveal(scope) {
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var items = scope.querySelectorAll(".reveal:not(.in-view)");
+
+        if (reduceMotion || !("IntersectionObserver" in window)) {
+          items.forEach(function (el) {
+            el.classList.add("in-view");
+          });
+          return;
+        }
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("in-view");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+        );
+
+        items.forEach(function (el) {
+          observer.observe(el);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var introBlock = document.getElementById("introBlock");
+        var continueBtn = document.getElementById("continueBtn");
+        var restContent = document.getElementById("restContent");
+
+        // Only the intro paragraph + button are on the page at first;
+        // watch just this block (it has no images of its own) rather
+        // than the whole .content-wrap, which also contains the
+        // hidden #restContent images — those are "loading=lazy" and
+        // never load while display:none, so waiting on them here would
+        // mean the intro paragraph's reveal never fires at all.
+        if (introBlock) {
+          whenImagesReady(introBlock, function () {
+            observeReveal(introBlock);
+          });
+        }
+
+        // "ادامه" / "جمع کردن" toggles the rest of the content. Expanding
+        // starts watching those blocks for the scroll-in effect right
+        // away — it does not wait for their images to finish loading,
+        // so the text itself shows up immediately after the click.
+        if (continueBtn && restContent) {
+          continueBtn.addEventListener("click", function () {
+            var isHidden = restContent.hidden;
+
+            if (isHidden) {
+              restContent.hidden = false;
+              continueBtn.textContent = "جمع کردن";
+              continueBtn.setAttribute("aria-expanded", "true");
+              restContent.scrollIntoView({ behavior: "smooth", block: "start" });
+              observeReveal(restContent);
+              // The back-to-top arrow is only relevant once this content
+              // exists on the page — start watching for it now, not before.
+              if (window.__backToTopControls) {
+                window.__backToTopControls.start();
+              }
+            } else {
+              restContent.hidden = true;
+              continueBtn.textContent = "ادامه";
+              continueBtn.setAttribute("aria-expanded", "false");
+              continueBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+              // Content is gone again, so the arrow has nothing to point
+              // back from — stop watching and hide it immediately.
+              if (window.__backToTopControls) {
+                window.__backToTopControls.stop();
+              }
+            }
+          });
+        }
+      });
+    })();
+  </script>
+  <!-- ===== END ADDED ===== -->
+  <!-- ===== ADDED: back-to-top button ===== -->
+  <button type="button" class="back-to-top" id="backToTop" aria-label="بازگشت به بالای صفحه">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var backToTop, trigger, observer, reduceMotion;
+
+      function setVisible(isVisible) {
+        if (backToTop) {
+          backToTop.classList.toggle("is-visible", isVisible);
+        }
+      }
+
+      function handleScrollFallback() {
+        if (!trigger) {
+          return;
+        }
+        var rect = trigger.getBoundingClientRect();
+        // Visible once the trigger's top has reached (or passed above)
+        // the top of the viewport — stays true all the way down the
+        // page, not just while the trigger itself is on screen.
+        setVisible(rect.top <= window.innerHeight);
+      }
+
+      // Only called once the "ادامه" content has actually been revealed —
+      // never on page load, so the arrow has nothing to react to (and
+      // can't falsely fire) before that content exists.
+      function start() {
+        if (!trigger || observer) {
+          return;
+        }
+        if ("IntersectionObserver" in window) {
+          observer = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                // isIntersecting is only true while the trigger itself is
+                // on screen. Once scrolled past it (boundingClientRect.top
+                // goes negative), keep the arrow showing instead of
+                // hiding it again — it should stay visible for the rest
+                // of the page, and only disappear if scrolled back above
+                // the trigger.
+                var pastIt = entry.boundingClientRect.top < 0;
+                setVisible(entry.isIntersecting || pastIt);
+              });
+            },
+            { threshold: 0 }
+          );
+          observer.observe(trigger);
+        } else {
+          window.addEventListener("scroll", handleScrollFallback);
+          handleScrollFallback();
+        }
+      }
+
+      // Called when the content is collapsed again — stop watching and
+      // hide the arrow immediately, regardless of current scroll spot.
+      function stop() {
+        if (observer) {
+          observer.disconnect();
+          observer = null;
+        }
+        window.removeEventListener("scroll", handleScrollFallback);
+        setVisible(false);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        backToTop = document.getElementById("backToTop");
+        trigger = document.getElementById("step2");
+        reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (!backToTop || !trigger) {
+          return;
+        }
+
+        backToTop.addEventListener("click", function () {
+          window.scrollTo({
+            top: 0,
+            behavior: reduceMotion ? "auto" : "smooth",
+          });
+        });
+
+        window.__backToTopControls = { start: start, stop: stop };
+      });
+    })();
+  </script>
+  <!-- ===== END ADDED ===== -->
 
 </body>
 </html>
