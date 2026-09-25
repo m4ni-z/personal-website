@@ -1833,6 +1833,18 @@
 
       var DEFAULT_DATA = '';
 
+      // Base render size used for the on-page preview (unchanged from before).
+      var BASE_SIZE = 260;
+      var BASE_MARGIN = 8;
+      var BASE_LOGO_MARGIN = 6;
+
+      // Much higher resolution used only when producing the actual output
+      // image (download / copy). This does not affect the on-screen
+      // preview in any way — the preview keeps rendering at BASE_SIZE
+      // exactly as before, and is simply displayed scaled-to-fit by the
+      // existing CSS (.preview-frame canvas { max-width/max-height: 100% }).
+      var EXPORT_SIZE = 3000;
+
       var state = {
         theme: 'classic',
         mode: 'light',
@@ -1882,7 +1894,15 @@
         return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value);
       }
 
-      function buildOptions(data) {
+      // size/margin/logoMargin default to the original preview values, so
+      // every existing call site (the live preview) behaves exactly as
+      // before. Passing a larger "size" is only used for the high-res
+      // export instance built on demand for download/copy.
+      function buildOptions(data, size, margin, logoMargin) {
+        size = size || BASE_SIZE;
+        margin = (margin === undefined) ? BASE_MARGIN : margin;
+        logoMargin = (logoMargin === undefined) ? BASE_LOGO_MARGIN : logoMargin;
+
         var themeConf = THEMES[state.theme];
         var hasLogo = !!state.logoDataUrl;
         var errorCorrectionLevel = hasLogo ? 'H' : 'M';
@@ -1903,11 +1923,11 @@
           : { color: state.color };
 
         var options = {
-          width: 260,
-          height: 260,
+          width: size,
+          height: size,
           type: 'canvas',
           data: data,
-          margin: 8,
+          margin: margin,
           qrOptions: {
             errorCorrectionLevel: errorCorrectionLevel
           },
@@ -1923,13 +1943,30 @@
           options.image = state.logoDataUrl;
           options.imageOptions = {
             crossOrigin: 'anonymous',
-            margin: 6,
+            margin: logoMargin,
             imageSize: state.logoSize,
             hideBackgroundDots: true
           };
         }
 
         return options;
+      }
+
+      // Builds a fresh, off-screen QRCodeStyling instance at EXPORT_SIZE,
+      // using the same theme/colors/logo as the current preview, for use
+      // only when producing the downloaded/copied image. The margin and
+      // logo margin are scaled up by the same factor as the size so the
+      // exported image looks identical in proportion to the preview —
+      // just at much higher resolution.
+      function createExportInstance(data) {
+        var scale = EXPORT_SIZE / BASE_SIZE;
+        var options = buildOptions(
+          data,
+          EXPORT_SIZE,
+          Math.round(BASE_MARGIN * scale),
+          Math.round(BASE_LOGO_MARGIN * scale)
+        );
+        return new QRCodeStyling(options);
       }
 
       function updateErrorCorrectionNote() {
@@ -2162,24 +2199,38 @@
         els.logoPanel.classList.remove('open');
       });
 
-      // Download
+      // Download — builds a separate high-resolution instance (EXPORT_SIZE)
+      // purely for the exported file, so the saved PNG is far higher
+      // quality than the small on-screen preview, without altering the
+      // preview itself.
       els.downloadBtn.addEventListener('click', function () {
         if (!qrCode) return;
-        qrCode.download({ name: 'qr-code', extension: 'png' });
+        var raw = els.urlInput.value.trim();
+        var data = raw || DEFAULT_DATA;
+        if (!data) return;
+
+        var exportQr = createExportInstance(data);
+        exportQr.download({ name: 'qr-code', extension: 'png' });
         showStatus('Download started.');
       });
 
-      // Copy
+      // Copy — likewise generates the high-resolution version via the
+      // library's own PNG export (getRawData), rather than grabbing the
+      // small preview canvas, so the copied image matches download quality.
       els.copyBtn.addEventListener('click', function () {
         if (!qrCode) return;
 
-        var canvas = els.previewFrame.querySelector('canvas');
-        if (!canvas || !navigator.clipboard || typeof ClipboardItem === 'undefined') {
+        if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
           showStatus('Copy is not supported in this browser.');
           return;
         }
 
-        canvas.toBlob(function (blob) {
+        var raw = els.urlInput.value.trim();
+        var data = raw || DEFAULT_DATA;
+        if (!data) return;
+
+        var exportQr = createExportInstance(data);
+        exportQr.getRawData('png').then(function (blob) {
           if (!blob) {
             showStatus('Could not copy the QR code.');
             return;
@@ -2191,6 +2242,8 @@
             .catch(function () {
               showStatus('Could not copy the QR code.');
             });
+        }).catch(function () {
+          showStatus('Could not copy the QR code.');
         });
       });
 
