@@ -1705,7 +1705,6 @@
         </div>
 
         <div class="preview-meta">
-          <span class="preview-meta-title" id="ecTitle">Error correction: Medium</span>
           <span class="preview-meta-sub" id="ecSub">Enable a center logo for higher-tolerance scanning.</span>
         </div>
 
@@ -1880,7 +1879,6 @@
         logoSizeValue: document.getElementById('logoSizeValue'),
         previewFrame: document.getElementById('previewFrame'),
         previewEmpty: document.getElementById('previewEmpty'),
-        ecTitle: document.getElementById('ecTitle'),
         ecSub: document.getElementById('ecSub'),
         downloadBtn: document.getElementById('downloadBtn'),
         copyBtn: document.getElementById('copyBtn'),
@@ -1971,10 +1969,8 @@
 
       function updateErrorCorrectionNote() {
         if (state.logoDataUrl) {
-          els.ecTitle.textContent = 'Error correction: High';
           els.ecSub.textContent = 'Boosted automatically because a center logo is active.';
         } else {
-          els.ecTitle.textContent = 'Error correction: Medium';
           els.ecSub.textContent = 'Enable a center logo for higher-tolerance scanning.';
         }
       }
