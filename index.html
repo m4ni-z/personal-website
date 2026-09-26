@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +6,6 @@
   <title>Mani Zamzami</title>
 
   <!-- Favicon -->
-
   <link rel="icon" type="image/png" href="assets/images/logo.png" />
 
   <style>
@@ -433,9 +431,9 @@
       height: 100vh;
       overflow-y: auto;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      padding: 64px 24px 56px;
       transition: margin-left 0.6s var(--ease-glass);
     }
 
@@ -443,14 +441,163 @@
       margin-left: var(--sidebar-rail);
     }
 
-    .welcome {
-      font-size: clamp(2.4rem, 6vw, 4.6rem);
+    /* -----------------------------------------------------------
+       Home page content
+    ----------------------------------------------------------- */
+    .home-content {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .welcome-section {
+      text-align: center;
+      padding: 10px 8px 6px;
+      user-select: none;
+    }
+
+    .welcome-title {
+      margin: 0;
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
       font-weight: 300;
       letter-spacing: 0.01em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--c-cyan) 60%, var(--c-blue) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 60px rgba(0, 160, 255, 0.22);
+    }
+
+    .suggestions-box {
+      position: relative;
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(180, 205, 255, 0.10);
+      background: rgba(255, 255, 255, 0.015);
+      padding: 26px 16px 16px;
+    }
+
+    .suggestions-label {
+      position: absolute;
+      top: 0;
+      left: 20px;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 200, 255, 0.45);
+      background: linear-gradient(135deg, rgba(0, 140, 255, 0.9), rgba(0, 200, 255, 0.8));
+      padding: 4px 14px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(0, 140, 255, 0.3);
+    }
+
+    .featured-section {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .feature-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      width: 100%;
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        0 14px 34px rgba(0, 0, 0, 0.35);
       color: var(--text-primary);
-      text-align: center;
-      text-shadow: 0 0 60px rgba(0, 160, 255, 0.25);
-      user-select: none;
+      text-decoration: none;
+      overflow: hidden;
+      transition: transform 0.4s var(--ease-glass), border-color 0.4s ease,
+        box-shadow 0.4s ease, background-color 0.4s ease;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.015) 22%,
+        rgba(255, 255, 255, 0) 45%
+      );
+      pointer-events: none;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 200, 255, 0.3);
+      background: rgba(10, 18, 36, 0.46);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 18px 44px rgba(0, 140, 255, 0.16);
+    }
+
+    .feature-card:focus-visible {
+      outline: 2px solid rgba(0, 200, 255, 0.6);
+      outline-offset: 3px;
+    }
+
+    .feature-card-media {
+      position: relative;
+      flex-shrink: 0;
+      width: 168px;
+      height: 168px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(180, 205, 255, 0.10);
+    }
+
+    .feature-card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .feature-card-body {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .feature-card-title {
+      margin: 0 0 8px;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 600;
+      letter-spacing: 0.005em;
+      color: var(--text-primary);
+    }
+
+    .feature-card-desc {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .feature-card-note {
+      margin: 8px 0 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      font-weight: 500;
+      color: var(--c-cyan);
     }
 
     /* =============================================================
@@ -469,10 +616,24 @@
 
       .main-content {
         margin-left: 0;
+        padding: calc(86px + env(safe-area-inset-top)) 16px 40px;
       }
 
       .sidebar.collapsed ~ .main-content {
         margin-left: 0;
+      }
+
+      .feature-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 16px;
+      }
+
+      .feature-card-media {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
       }
 
       .mobile-menu-btn {
@@ -647,7 +808,7 @@
     }
 
     @media (max-width: 360px) {
-      .welcome {
+      .welcome-title {
         font-size: clamp(2rem, 9vw, 2.6rem);
       }
     }
@@ -922,7 +1083,47 @@
 </aside>
 
 <main class="main-content">
-  <p class="welcome">Welcome</p>
+  <div class="home-content">
+
+    <section class="welcome-section">
+      <h1 class="welcome-title">Welcome</h1>
+    </section>
+
+    <div class="suggestions-box">
+      <span class="suggestions-label">Suggestions</span>
+      <section class="featured-section" aria-label="Featured">
+
+        <a class="feature-card" href="tools/qr-code-generator/">
+          <div class="feature-card-media">
+            <img src="assets/images/qr-code.png" alt="QR Code Generator" loading="lazy" />
+          </div>
+          <div class="feature-card-body">
+            <h2 class="feature-card-title">QR Code Generator</h2>
+            <p class="feature-card-desc">
+              Create and customize QR codes — adjust colors, styles, and overall look to make them your own.
+            </p>
+          </div>
+        </a>
+
+        <a class="feature-card" href="projects/a-home-for-crisis/">
+          <div class="feature-card-media">
+            <img src="projects/a-home-for-crisis/images/logo.png" alt="A Home for Crisis" loading="lazy" />
+          </div>
+          <div class="feature-card-body">
+            <h2 class="feature-card-title">A Home for Crisis</h2>
+            <p class="feature-card-desc">
+              School project — Seminar 40, Allame Helli 1 Tehran Middle School.
+            </p>
+            <p class="feature-card-note">
+              Available until October 8, 2026 — after that, it will be locked.
+            </p>
+          </div>
+        </a>
+
+      </section>
+    </div>
+
+  </div>
 </main>
 
   </div>
