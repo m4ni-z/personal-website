@@ -646,7 +646,7 @@
       border-radius: 4px;
     }
 
-    /* Open in Bale — the only control that navigates */
+    /* Open in Bale / Telegram — the only control that navigates */
     .bot-actions {
       flex-shrink: 0;
       margin-left: 4px;
@@ -698,7 +698,7 @@
       line-height: 1.55;
     }
 
-    /* Stack the Open in Bale button under the title on very narrow screens */
+    /* Stack the Open button under the title on very narrow screens */
     @media (max-width: 480px) {
       .bot-item-row {
         flex-wrap: wrap;
@@ -1253,7 +1253,7 @@
                 type="button"
                 class="bot-toggle"
                 aria-expanded="false"
-                aria-controls="bot-desc-qr-code-generator"
+                aria-controls="bot-desc-qr-code-generator-bale"
                 aria-label="Toggle description for QR Code Generator"
               >
                 <svg viewBox="0 0 24 24">
@@ -1265,7 +1265,7 @@
                 type="button"
                 class="bot-title"
                 aria-expanded="false"
-                aria-controls="bot-desc-qr-code-generator"
+                aria-controls="bot-desc-qr-code-generator-bale"
               >
                 QR Code Generator
               </button>
@@ -1274,7 +1274,7 @@
                 <a class="open-bot-btn" href="https://ble.ir/qrmaker_bot" target="_blank" rel="noopener noreferrer">Open in Bale</a>
               </div>
             </div>
-            <div class="bot-description" id="bot-desc-qr-code-generator">
+            <div class="bot-description" id="bot-desc-qr-code-generator-bale">
               <p>A simple Bale bot that takes a link and returns a QR code image. The generated QR code is simple and does not support customization.</p>
             </div>
           </div>
@@ -1289,7 +1289,41 @@
         aria-labelledby="telegramTab"
         hidden
       >
-        <p class="bots-empty">Nothing to show</p>
+        <div class="bots-list">
+
+          <div class="bot-item">
+            <div class="bot-item-row">
+              <button
+                type="button"
+                class="bot-toggle"
+                aria-expanded="false"
+                aria-controls="bot-desc-qr-code-generator-tg"
+                aria-label="Toggle description for QR Code Generator"
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                class="bot-title"
+                aria-expanded="false"
+                aria-controls="bot-desc-qr-code-generator-tg"
+              >
+                QR Code Generator
+              </button>
+
+              <div class="bot-actions">
+                <a class="open-bot-btn" href="https://t.me/qrrmakerbot" target="_blank" rel="noopener noreferrer">Open in Telegram</a>
+              </div>
+            </div>
+            <div class="bot-description" id="bot-desc-qr-code-generator-tg">
+              <p>A simple Bale bot that takes a link and returns a QR code image. The generated QR code is simple and does not support customization.</p>
+            </div>
+          </div>
+
+        </div>
       </section>
     </div>
 
@@ -1407,7 +1441,7 @@
     // Bot item expand / collapse.
     // Both the arrow button and the bot title toggle the same
     // description. Neither one navigates anywhere — only the
-    // "Open in Bale" link does that.
+    // "Open in Bale / Telegram" link does that.
     (function () {
       document.querySelectorAll('.bot-item').forEach(function (item) {
         var arrowBtn = item.querySelector('.bot-toggle');
