@@ -1288,6 +1288,121 @@
         min-height: 42px;
       }
     }
+
+    /* =============================================================
+       CUSTOM DOT CURSOR  (فقط برای ماوس؛ روی لمسی فعال نمی‌شود)
+    ============================================================= */
+    html.has-custom-cursor,
+    html.has-custom-cursor * {
+      cursor: none !important;
+    }
+
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 99999;
+      border-radius: 50%;
+      opacity: 0;
+      will-change: transform;
+      transition: opacity 0.3s ease;
+    }
+
+    .cursor-visible .cursor-dot,
+    .cursor-visible .cursor-ring {
+      opacity: 1;
+    }
+
+    /* لایهٔ داخلی برای تغییر اندازه و رنگ، جدا از حرکت */
+    .cursor-dot i,
+    .cursor-ring i {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      display: block;
+      transition:
+        transform 0.35s var(--ease-glass),
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        opacity 0.3s ease;
+    }
+
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      margin: -4px 0 0 -4px;
+    }
+
+    .cursor-dot i {
+      background: var(--c-cyan);
+      box-shadow: 0 0 10px rgba(0, 200, 255, 0.9), 0 0 22px rgba(0, 140, 255, 0.55);
+    }
+
+    .cursor-ring {
+      width: 28px;
+      height: 28px;
+      margin: -14px 0 0 -14px;
+    }
+
+    .cursor-ring i {
+      border: 1.5px solid rgba(0, 200, 255, 0.55);
+      background: rgba(0, 200, 255, 0.04);
+      box-shadow: 0 0 18px rgba(0, 140, 255, 0.22);
+    }
+
+    /* روی دکمه‌ها و پیوندها: رنگ بنفش روشن، حلقه بزرگ‌تر و پرتر */
+    .cursor-hover .cursor-dot i {
+      background: #a79bff;
+      box-shadow: 0 0 12px rgba(167, 155, 255, 0.95), 0 0 26px rgba(91, 77, 255, 0.7);
+      transform: scale(0.7);
+    }
+
+    .cursor-hover .cursor-ring i {
+      border-color: rgba(167, 155, 255, 0.85);
+      background: rgba(91, 77, 255, 0.16);
+      box-shadow: 0 0 26px rgba(91, 77, 255, 0.45);
+      transform: scale(1.55);
+    }
+
+    /* هنگام کلیک: حلقه جمع می‌شود */
+    .cursor-down .cursor-ring i {
+      transform: scale(0.72);
+    }
+
+    .cursor-down.cursor-hover .cursor-ring i {
+      transform: scale(1.2);
+    }
+
+    .cursor-down .cursor-dot i {
+      transform: scale(1.5);
+    }
+
+    /* موج کوچک هنگام کلیک */
+    .cursor-pulse {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      margin: -7px 0 0 -7px;
+      border-radius: 50%;
+      border: 1.5px solid var(--c-cyan);
+      pointer-events: none;
+      z-index: 99998;
+      animation: cursorPulse 0.6s ease-out forwards;
+    }
+
+    .cursor-pulse.violet {
+      border-color: #a79bff;
+    }
+
+    @keyframes cursorPulse {
+      from { opacity: 0.9; transform: var(--pos) scale(1); }
+      to { opacity: 0; transform: var(--pos) scale(4.2); }
+    }
   </style>
 
 </head>
@@ -2251,6 +2366,122 @@
         });
       }
       render();
+    })();
+
+    // Custom dot cursor (real mouse only, ignores touch and pen)
+    (function () {
+      if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      if (!window.PointerEvent) return;
+
+      var root = document.documentElement;
+      var body = document.body;
+
+      var dot = document.createElement('div');
+      dot.className = 'cursor-dot';
+      dot.innerHTML = '<i></i>';
+
+      var ring = document.createElement('div');
+      ring.className = 'cursor-ring';
+      ring.innerHTML = '<i></i>';
+
+      body.appendChild(ring);
+      body.appendChild(dot);
+      root.classList.add('has-custom-cursor');
+
+      var mouseX = -100, mouseY = -100;
+      var ringX = -100, ringY = -100;
+      var started = false;
+
+      // Everything that behaves like a button or a link
+      var interactiveSelector =
+        'a, button, [role="button"], summary, label, select, input, textarea, ' +
+        '.feature-card, .nav-link, .sidebar-toggle, .mobile-menu-btn, .mobile-drawer-close';
+
+      function hideCursor() {
+        started = false;
+        body.classList.remove('cursor-visible', 'cursor-hover', 'cursor-down');
+      }
+
+      function isMouse(e) {
+        return e.pointerType === 'mouse';
+      }
+
+      // Touch or pen input: hide the cursor right away so it never shows on taps
+      document.addEventListener('pointerdown', function (e) {
+        if (!isMouse(e)) hideCursor();
+      }, { passive: true });
+
+      document.addEventListener('touchstart', hideCursor, { passive: true });
+
+      document.addEventListener('pointermove', function (e) {
+        if (!isMouse(e)) {
+          hideCursor();
+          return;
+        }
+
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!started) {
+          started = true;
+          ringX = mouseX;
+          ringY = mouseY;
+          body.classList.add('cursor-visible');
+        }
+      }, { passive: true });
+
+      document.addEventListener('pointerover', function (e) {
+        if (!isMouse(e)) return;
+        var target = e.target.closest ? e.target.closest(interactiveSelector) : null;
+        body.classList.toggle('cursor-hover', !!target);
+      });
+
+      document.addEventListener('pointerdown', function (e) {
+        if (!isMouse(e) || !started) return;
+
+        body.classList.add('cursor-down');
+
+        var pulse = document.createElement('div');
+        pulse.className = 'cursor-pulse' + (body.classList.contains('cursor-hover') ? ' violet' : '');
+        pulse.style.setProperty('--pos', 'translate(' + mouseX + 'px, ' + mouseY + 'px)');
+        body.appendChild(pulse);
+        pulse.addEventListener('animationend', function () {
+          pulse.remove();
+        });
+      });
+
+      document.addEventListener('pointerup', function () {
+        body.classList.remove('cursor-down');
+      });
+
+      document.addEventListener('pointercancel', function () {
+        body.classList.remove('cursor-down');
+      });
+
+      window.addEventListener('blur', function () {
+        body.classList.remove('cursor-down');
+      });
+
+      document.documentElement.addEventListener('mouseleave', function () {
+        body.classList.remove('cursor-visible');
+      });
+
+      document.documentElement.addEventListener('mouseenter', function () {
+        if (started) body.classList.add('cursor-visible');
+      });
+
+      function render() {
+        // The ring follows the dot smoothly
+        ringX += (mouseX - ringX) * 0.2;
+        ringY += (mouseY - ringY) * 0.2;
+
+        dot.style.transform = 'translate3d(' + mouseX + 'px,' + mouseY + 'px,0)';
+        ring.style.transform = 'translate3d(' + ringX + 'px,' + ringY + 'px,0)';
+
+        requestAnimationFrame(render);
+      }
+
+      requestAnimationFrame(render);
     })();
   </script>
 
