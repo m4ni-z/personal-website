@@ -501,7 +501,7 @@
       min-width: 0;
     }
 
-    /* Arrow / expand toggle — no circular background or border */
+    /* Arrow / expand toggle: no circular background or border */
     .project-toggle {
       flex-shrink: 0;
       width: 32px;
@@ -544,7 +544,7 @@
       transform: rotate(90deg);
     }
 
-    /* Title acts as a second expand/collapse trigger — never navigates */
+    /* Title acts as a second expand/collapse trigger, never navigates */
     .project-title {
       flex: 1;
       min-width: 0;
@@ -575,7 +575,7 @@
       border-radius: 4px;
     }
 
-    /* Play button — the only control that navigates */
+    /* Play button: the only control that navigates */
     .project-actions {
       flex-shrink: 0;
       margin-left: 4px;
@@ -855,7 +855,7 @@
     }
 
     /* =============================================================
-       CUSTOM DOT CURSOR  (فقط برای ماوس؛ روی لمسی فعال نمی‌شود)
+       CUSTOM DOT CURSOR  (mouse only; disabled on touch devices)
     ============================================================= */
     html.has-custom-cursor,
     html.has-custom-cursor * {
@@ -880,7 +880,7 @@
       opacity: 1;
     }
 
-    /* لایهٔ داخلی برای تغییر اندازه و رنگ، جدا از حرکت */
+    /* Inner layer used for size and color changes, separate from movement */
     .cursor-dot i,
     .cursor-ring i {
       position: absolute;
@@ -918,7 +918,7 @@
       box-shadow: 0 0 18px rgba(0, 140, 255, 0.22);
     }
 
-    /* روی دکمه‌ها و پیوندها: رنگ بنفش روشن، حلقه بزرگ‌تر و پرتر */
+    /* Over buttons and links: light violet color, larger and brighter ring */
     .cursor-hover .cursor-dot i {
       background: #a79bff;
       box-shadow: 0 0 12px rgba(167, 155, 255, 0.95), 0 0 26px rgba(91, 77, 255, 0.7);
@@ -932,7 +932,7 @@
       transform: scale(1.55);
     }
 
-    /* هنگام کلیک: حلقه جمع می‌شود */
+    /* While clicking: the ring shrinks */
     .cursor-down .cursor-ring i {
       transform: scale(0.72);
     }
@@ -945,7 +945,7 @@
       transform: scale(1.5);
     }
 
-    /* موج کوچک هنگام کلیک */
+    /* Small ripple on click */
     .cursor-pulse {
       position: fixed;
       top: 0;
@@ -1325,6 +1325,45 @@
         </div>
       </div>
 
+      <div class="project-item">
+        <div class="project-item-row">
+          <button
+            type="button"
+            class="project-toggle"
+            aria-expanded="false"
+            aria-controls="project-desc-tic-tac-toe"
+            aria-label="Toggle description for Tic Tac Toe"
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="project-title"
+            aria-expanded="false"
+            aria-controls="project-desc-tic-tac-toe"
+          >
+            Tic Tac Toe
+          </button>
+
+          <div class="project-actions">
+            <a
+              class="open-project-btn"
+              href="tic-tac-toe/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Play Tic Tac Toe (opens in a new tab)"
+            >Play</a>
+          </div>
+        </div>
+        <div class="project-description" id="project-desc-tic-tac-toe">
+          <p>A classic two-player strategy game played on a 3x3 grid. Players take turns placing X and O in the empty squares, and the first player to line up three of their marks in a row, column, or diagonal wins. If all nine squares are filled without a winner, the game ends in a draw.</p>
+          <p>The game is online and does not require installation. It is simple to learn and quick to play.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </main>
@@ -1411,7 +1450,7 @@
 
     // Game item expand / collapse.
     // Both the arrow button and the game title toggle the same
-    // description. Neither one navigates anywhere — only the
+    // description. Neither one navigates anywhere; only the
     // "Play" link does that.
     (function () {
       document.querySelectorAll('.project-item').forEach(function (item) {
